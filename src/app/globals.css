@@ -1,15 +1,49 @@
 /*
  * src/app/globals.css
- * Zakali Press — styles globaux.
+ * Zakali Press — l'identité de la maison.
  *
- * Volontairement nu a ce stade. La charte viendra avec les pages, a la phase 5.
+ * Reprise du site archivé : la charte avait été travaillée et validée, ce
+ * n'était pas elle le probleme. Elle est ici posee AVANT la premiere page,
+ * pour qu'aucune page n'invente sa propre couleur.
  *
- * Une seule regle est deja la, et elle vient d'un bug paye comptant sur le
- * projet precedent : la feuille contraignait `img` mais pas `video`. Une
- * sequence de figure s'affichait alors a sa taille d'origine — 1920 px — et
- * poussait toute la page en defilement horizontal. La regle couvre les trois
- * media, une fois pour toutes.
+ * Une difference avec l'ancien site, et elle est assumee : la charte n'est
+ * plus modifiable depuis une administration. Elle etait alimentee par des
+ * variables CSS venues du contenu editorial ; elle est desormais dans le code.
+ * Changer le bordeaux est devenu un commit.
  */
+
+:root {
+  /* ── Couleurs ────────────────────────────────────────────────────────────
+   * Bordeaux profond et or : l'identite du site archive, reprise telle quelle.
+   */
+  --bordeaux: #4a0404;
+  --bordeaux-clair: #6b1010;
+  --or: #c5a059;
+  --or-clair: #d4b574;
+
+  --encre: #0a0a0a;
+  --encre-douce: #6b6050;
+
+  --papier: #fafaf8;
+  --sable: #f2ede4;
+  --sable-profond: #e8dfd0;
+
+  /* ── Typographies ────────────────────────────────────────────────────────
+   * Les familles viennent de `next/font`, qui les heberge avec le site : pas
+   * de requete vers un tiers au chargement, et pas de saut de texte quand la
+   * police arrive.
+   */
+  --titre: var(--police-titre), Georgia, 'Times New Roman', serif;
+  --labeur: var(--police-labeur), system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ── Mesures ─────────────────────────────────────────────────────────────
+   * Une seule echelle, pour que les espacements ne soient pas decides page
+   * par page.
+   */
+  --pas: 0.5rem;
+  --mesure: 68ch;
+  --rayon: 3px;
+}
 
 *,
 *::before,
@@ -19,13 +53,68 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  line-height: 1.6;
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--labeur);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
+h1,
+h2,
+h3 {
+  font-family: var(--titre);
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0;
+}
+
+a {
+  color: var(--bordeaux);
+}
+
+a:hover {
+  color: var(--bordeaux-clair);
+}
+
+/*
+ * Le focus reste visible. Le retirer « parce que c'est plus propre » rend le
+ * site inutilisable au clavier.
+ */
+:focus-visible {
+  outline: 2px solid var(--or);
+  outline-offset: 2px;
+}
+
+/*
+ * Une regle qui vient d'un bug paye comptant sur le site archive : la feuille
+ * contraignait `img` mais pas `video`. Une sequence de figure s'affichait donc
+ * a sa taille d'origine — 1920 px — et poussait toute la page en defilement
+ * horizontal. La regle couvre les trois media, une fois pour toutes.
+ */
 img,
 video,
 audio {
   max-width: 100%;
   height: auto;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * ── Thème sombre : décision ouverte ──────────────────────────────────────
+ * Le site archivé n'en avait pas. Une page de lecture longue en gagnerait,
+ * mais le bordeaux et l'or demandent d'être retravaillés pour tenir sur fond
+ * sombre — ce n'est pas une inversion mécanique. À trancher avec les pages,
+ * pas avant.
+ */

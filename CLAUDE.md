@@ -67,6 +67,33 @@ souvent sa réponse là-bas, écrite sur place.
 | Ouvrages | **un manifeste par ouvrage** ; le catalogue vient de l'index. **Il n'y a pas de table des ouvrages** |
 | Fichiers d'ouvrage | stockage objet compatible S3, **reporté** au jour de la publication |
 | Langue du code | **français** — identifiants, commentaires, noms de fichiers |
+| Interface | **l'identité du site archivé est reprise, la mise en page est revue** |
+
+## L'interface
+
+**L'identité est reprise telle quelle** — bordeaux `#4A0404`, or `#C5A059`,
+papier et sable, Playfair Display pour les titres et Inter pour le labeur. Elle
+avait été travaillée et validée : ce n'était pas elle le problème. Elle est posée
+dans `globals.css`, **avant la première page**, pour qu'aucune page n'invente sa
+propre couleur.
+
+**La mise en page, elle, est revue** — parce qu'un catalogue à plusieurs ouvrages
+ne se présente pas comme un catalogue à un seul :
+
+- l'ancien affichait quinze fiches qui étaient cinq volumes × trois langues, et
+  le filtre de langue masquait la duplication. Avec plusieurs ouvrages,
+  **l'œuvre devient un niveau au-dessus de l'édition**, et le catalogue doit le
+  montrer ;
+- les disciplines étaient décoratives avec un seul ouvrage ; elles deviennent un
+  vrai axe de navigation ;
+- un ouvrage à cinq volumes et un ouvrage à volume unique ne peuvent pas
+  s'afficher de la même façon.
+
+Deux choses que le site archivé n'avait pas tranchées, et qui se décident **avec
+les pages, pas avant** : un thème sombre, et une discipline responsive explicite.
+
+Ce qui change et qu'il faut assumer : **la charte n'est plus modifiable depuis une
+administration.** Changer le bordeaux est devenu un commit.
 
 ## Le piège qui casserait en silence
 
