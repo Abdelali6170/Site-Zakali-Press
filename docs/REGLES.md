@@ -38,16 +38,23 @@ l'atelier — **ne regarde pas le site**.
 ```
 <quai>/<ouvrage>/
   <volume>/<langue>/            le site HTML du volume
-  pdf/<langue>/                 les PDF
+  <volume>/pdf/<langue>/        les PDF de ce volume
+  <volume>/couverture/<langue>.png
   media/<langue>/narration/chNN/
   media/<langue>/video/chNN/
   media/<langue>/audio/chNN/
-  couverture/<langue>.png
 ```
 
 **Le manifeste ne porte donc aucun chemin.** Ni dossier de volume, ni dossier de
 chapitres, ni suffixe de langue, ni gabarit de nom de PDF, ni racine de
 couvertures : la place de chaque chose est connue d'avance.
+
+**Le volume porte tout ce qui le concerne ; l'ouvrage ne porte que les médias.**
+Un ouvrage à cinq volumes a cinq couvertures et cinq jeux de PDF : les ranger au
+niveau de l'ouvrage obligerait à relire un nom de fichier pour savoir quel volume
+il sert — un gabarit de nom réintroduit là où cette règle vient de les supprimer.
+Les médias, eux, restent à l'ouvrage : les chapitres y sont numérotés d'un seul
+tenant sur tout l'ouvrage, `ch01` à `ch44`, sans égard aux volumes.
 
 > **Pourquoi** — les arborescences de production divergent d'un ouvrage à
 > l'autre : `chapitres_fr` chez l'un, `chapters_fr` chez l'autre, `covers` ici et
@@ -59,6 +66,21 @@ couvertures : la place de chaque chose est connue d'avance.
 >
 > **Figé par** — le test à deux ouvrages d'essai monte deux quais de forme
 > identique, l'un à deux volumes et deux langues, l'autre à volume unique.
+
+### 1.2 bis — Le quai fixe l'extérieur d'un volume, jamais son intérieur
+
+La forme est imposée jusqu'au dossier `<volume>/<langue>/`. **En dessous, rien
+n'est imposé** : `chapters/chapter_01.html` chez l'un et
+`chapitres_fr/chapter_01.fr.html` chez l'autre sont deux cas normaux.
+
+> **Pourquoi** — l'intérieur d'un volume n'a pas besoin d'être fixé, parce qu'il
+> n'est jamais deviné : le sommaire donne l'adresse de chaque chapitre, une page
+> donne l'adresse de ses images (règle 2.1). Fixer ce qui se lit déjà coûterait
+> une réécriture des pages à chaque livraison, pour rien.
+>
+> Cela dit aussi ce que la normalisation d'un quai a le droit de toucher : les
+> dossiers extérieurs, et eux seuls. Une normalisation qui entre dans un volume
+> casse les liens relatifs de ses pages.
 
 ### 1.3 — Le manifeste vit avec le code, pas avec les ouvrages
 

@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "quai:normaliser": "tsx outils/normaliser-quai.ts"
   },
   "dependencies": {
     "next": "^16.3.3",
@@ -27,6 +28,7 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.3.3",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.0",
     "vitest": "^4.1.11"
   }
