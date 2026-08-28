@@ -47,7 +47,7 @@ ne reprend pas.
 | | |
 |---|---|
 | **L'archive** | l'ancien dépôt — la trace, et la preuve. On la consulte pour comprendre *pourquoi* une règle existe |
-| **La distillation** | la spécification — les règles, chacune avec sa raison et le test qui la fige |
+| **La distillation** | **[`docs/REGLES.md`](docs/REGLES.md)** — les 53 règles, chacune avec sa raison et le test qui la fige. **À lire avant d'écrire.** Un test cite sa règle par son numéro |
 | **Le résultat** | ce dépôt |
 
 Donc : **ne jamais recopier de code de l'ancien projet** — mais ne jamais le
