@@ -1,0 +1,163 @@
+{
+  "$commentaire": [
+    "Zakali Press — manifeste de Biology 2e. Format : docs/REGLES.md, regles 1.6 et 1.7.",
+    "",
+    "Ce fichier porte CE QUE LE QUAI NE DIT PAS : titres, accroches, descriptions,",
+    "prix, discipline, chapitres offerts, portee de la vente. Tout le reste est lu",
+    "sur le quai — les chapitres viennent du sommaire, les figures de la narration,",
+    "la licence de la preface.",
+    "",
+    "`id` est aussi le nom du dossier sur le quai : c'est ce qui evite d'ecrire un",
+    "chemin ici (regle 1.2)."
+  ],
+
+  "id": "biology-2e",
+  "author": "A. El Mamouni",
+  "currency": "EUR",
+  "languages": ["fr", "en", "es"],
+
+  "work": {
+    "fr": { "title": "Biologie 2e", "edition": "2ᵉ édition — version française" },
+    "en": { "title": "Biology 2e", "edition": "2nd edition — English version" },
+    "es": { "title": "Biología 2e", "edition": "2.ª edición — versión española" }
+  },
+
+  "category": {
+    "slug": "biologie",
+    "fr": { "label": "Biologie", "group": "Sciences" },
+    "en": { "label": "Biology", "group": "Sciences" },
+    "es": { "label": "Biología", "group": "Ciencias" }
+  },
+
+  "settings": {
+    "freeChapters": 1,
+    "purchaseScope": "work",
+    "extractPdf": false,
+    "figureVideo": true,
+    "figureAudio": false
+  },
+
+  "sourceWork": {
+    "title": "OpenStax Biology 2e",
+    "publisher": "Rice University",
+    "url": "https://openstax.org/details/books/biology-2e"
+  },
+
+  "volumes": [
+    {
+      "number": 1,
+      "featured": true,
+      "price": 3900,
+      "fr": {
+        "slug": "biologie-volume-i",
+        "title": "Biologie — Volume I : Fondements moléculaires et cellulaires de la vie",
+        "tagline": "Des molécules à la cellule : fondements chimiques du vivant, macromolécules, structure cellulaire, métabolisme et division.",
+        "description": "Volume I d’une série de cinq : Fondements moléculaires et cellulaires de la vie. Ce tome couvre les chapitres 1–11 de Biology 2e.\n\nL’édition française comprend le texte intégral des chapitres et leurs exercices, accompagnés d’une séquence vidéo pour chacune de ses figures, intégrée au fil du texte. Trois versions linguistiques sont disponibles — française, espagnole et anglaise — chacune en PDF complet, ou séparément en volume de cours et volume d’exercices.\n\nCe livre s’inspire et s’appuie sur le contenu d’OpenStax Biology 2e (Rice University), disponible librement sous licence Creative Commons Attribution 4.0 International (CC BY 4.0)."
+      },
+      "en": {
+        "slug": "biology-volume-i",
+        "title": "Biology — Volume I: Molecular and Cellular Foundations of Life",
+        "tagline": "From molecules to the cell: the chemical foundations of life, macromolecules, cell structure, metabolism and division.",
+        "description": "Volume I of five: Molecular and Cellular Foundations of Life. This volume covers chapters 1–11 of Biology 2e.\n\nThe English edition carries the full text of the chapters and their exercises, together with a video clip for each of its figures, embedded throughout. Three language versions are available — English, French and Spanish — each as a complete PDF, or separately as a course volume and an exercise volume.\n\nThis book is inspired by and builds on the content of OpenStax Biology 2e (Rice University), which is openly available under a Creative Commons Attribution 4.0 International (CC BY 4.0) license."
+      },
+      "es": {
+        "slug": "biologia-volumen-i",
+        "title": "Biología — Volumen I: Fundamentos moleculares y celulares de la vida",
+        "tagline": "De las moléculas a la célula: fundamentos químicos de lo vivo, macromoléculas, estructura celular, metabolismo y división.",
+        "description": "Volumen I de una serie de cinco: Fundamentos moleculares y celulares de la vida. Este tomo abarca los capítulos 1–11 de Biology 2e.\n\nLa edición española comprende el texto íntegro de los capítulos y sus ejercicios, con una secuencia de vídeo para cada una de sus figuras, integrada a lo largo del texto. Hay tres versiones lingüísticas disponibles — española, francesa e inglesa — cada una en PDF completo, o por separado en volumen de teoría y volumen de ejercicios.\n\nEste libro se inspira y se apoya en el contenido de OpenStax Biology 2e (Rice University), disponible libremente bajo licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)."
+      }
+    },
+    {
+      "number": 2,
+      "featured": false,
+      "price": 3900,
+      "fr": {
+        "slug": "biologie-volume-ii",
+        "title": "Biologie — Volume II : Génétique et évolution",
+        "tagline": "De la structure de l’ADN aux mécanismes de la spéciation : hérédité, expression des gènes, biotechnologie et évolution.",
+        "description": "Volume II d’une série de cinq : Génétique et évolution. Ce tome couvre les chapitres 12–18 de Biology 2e.\n\nL’édition française comprend le texte intégral des chapitres et leurs exercices, accompagnés d’une séquence vidéo pour chacune de ses figures, intégrée au fil du texte. Trois versions linguistiques sont disponibles — française, espagnole et anglaise — chacune en PDF complet, ou séparément en volume de cours et volume d’exercices.\n\nCe livre s’inspire et s’appuie sur le contenu d’OpenStax Biology 2e (Rice University), disponible librement sous licence Creative Commons Attribution 4.0 International (CC BY 4.0)."
+      },
+      "en": {
+        "slug": "biology-volume-ii",
+        "title": "Biology — Volume II: Genetics and Evolution",
+        "tagline": "From the structure of DNA to the mechanisms of speciation: heredity, gene expression, biotechnology and evolution.",
+        "description": "Volume II of five: Genetics and Evolution. This volume covers chapters 12–18 of Biology 2e.\n\nThe English edition carries the full text of the chapters and their exercises, together with a video clip for each of its figures, embedded throughout. Three language versions are available — English, French and Spanish — each as a complete PDF, or separately as a course volume and an exercise volume.\n\nThis book is inspired by and builds on the content of OpenStax Biology 2e (Rice University), which is openly available under a Creative Commons Attribution 4.0 International (CC BY 4.0) license."
+      },
+      "es": {
+        "slug": "biologia-volumen-ii",
+        "title": "Biología — Volumen II: Genética y evolución",
+        "tagline": "De la estructura del ADN a los mecanismos de la especiación: herencia, expresión génica, biotecnología y evolución.",
+        "description": "Volumen II de una serie de cinco: Genética y evolución. Este tomo abarca los capítulos 12–18 de Biology 2e.\n\nLa edición española comprende el texto íntegro de los capítulos y sus ejercicios, con una secuencia de vídeo para cada una de sus figuras, integrada a lo largo del texto. Hay tres versiones lingüísticas disponibles — española, francesa e inglesa — cada una en PDF completo, o por separado en volumen de teoría y volumen de ejercicios.\n\nEste libro se inspira y se apoya en el contenido de OpenStax Biology 2e (Rice University), disponible libremente bajo licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)."
+      }
+    },
+    {
+      "number": 3,
+      "featured": false,
+      "price": 3900,
+      "fr": {
+        "slug": "biologie-volume-iii",
+        "title": "Biologie — Volume III : La diversité du vivant",
+        "tagline": "Le panorama des règnes : virus, procaryotes, protistes, champignons, plantes sans graine et à graines, invertébrés et vertébrés.",
+        "description": "Volume III d’une série de cinq : La diversité du vivant. Ce tome couvre les chapitres 19–27 de Biology 2e.\n\nL’édition française comprend le texte intégral des chapitres et leurs exercices, accompagnés d’une séquence vidéo pour chacune de ses figures, intégrée au fil du texte. Trois versions linguistiques sont disponibles — française, espagnole et anglaise — chacune en PDF complet, ou séparément en volume de cours et volume d’exercices.\n\nCe livre s’inspire et s’appuie sur le contenu d’OpenStax Biology 2e (Rice University), disponible librement sous licence Creative Commons Attribution 4.0 International (CC BY 4.0)."
+      },
+      "en": {
+        "slug": "biology-volume-iii",
+        "title": "Biology — Volume III: The Diversity of Life",
+        "tagline": "A survey of the kingdoms: viruses, prokaryotes, protists, fungi, seedless and seed plants, invertebrates and vertebrates.",
+        "description": "Volume III of five: The Diversity of Life. This volume covers chapters 19–27 of Biology 2e.\n\nThe English edition carries the full text of the chapters and their exercises, together with a video clip for each of its figures, embedded throughout. Three language versions are available — English, French and Spanish — each as a complete PDF, or separately as a course volume and an exercise volume.\n\nThis book is inspired by and builds on the content of OpenStax Biology 2e (Rice University), which is openly available under a Creative Commons Attribution 4.0 International (CC BY 4.0) license."
+      },
+      "es": {
+        "slug": "biologia-volumen-iii",
+        "title": "Biología — Volumen III: La diversidad de la vida",
+        "tagline": "El panorama de los reinos: virus, procariotas, protistas, hongos, plantas sin semilla y con semilla, invertebrados y vertebrados.",
+        "description": "Volumen III de una serie de cinco: La diversidad de la vida. Este tomo abarca los capítulos 19–27 de Biology 2e.\n\nLa edición española comprende el texto íntegro de los capítulos y sus ejercicios, con una secuencia de vídeo para cada una de sus figuras, integrada a lo largo del texto. Hay tres versiones lingüísticas disponibles — española, francesa e inglesa — cada una en PDF completo, o por separado en volumen de teoría y volumen de ejercicios.\n\nEste libro se inspira y se apoya en el contenido de OpenStax Biology 2e (Rice University), disponible libremente bajo licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)."
+      }
+    },
+    {
+      "number": 4,
+      "featured": false,
+      "price": 3900,
+      "fr": {
+        "slug": "biologie-volume-iv",
+        "title": "Biologie — Volume IV : Forme et fonction",
+        "tagline": "Le volume le plus dense : structure et reproduction des plantes, puis les onze grands systèmes du corps animal, du digestif à l’immunitaire.",
+        "description": "Volume IV d’une série de cinq : Forme et fonction. Ce tome couvre les chapitres 28–40 de Biology 2e.\n\nL’édition française comprend le texte intégral des chapitres et leurs exercices, accompagnés d’une séquence vidéo pour chacune de ses figures, intégrée au fil du texte. Trois versions linguistiques sont disponibles — française, espagnole et anglaise — chacune en PDF complet, ou séparément en volume de cours et volume d’exercices.\n\nCe livre s’inspire et s’appuie sur le contenu d’OpenStax Biology 2e (Rice University), disponible librement sous licence Creative Commons Attribution 4.0 International (CC BY 4.0)."
+      },
+      "en": {
+        "slug": "biology-volume-iv",
+        "title": "Biology — Volume IV: Form and Function",
+        "tagline": "The largest volume: plant structure and reproduction, then the eleven major systems of the animal body, from digestive to immune.",
+        "description": "Volume IV of five: Form and Function. This volume covers chapters 28–40 of Biology 2e.\n\nThe English edition carries the full text of the chapters and their exercises, together with a video clip for each of its figures, embedded throughout. Three language versions are available — English, French and Spanish — each as a complete PDF, or separately as a course volume and an exercise volume.\n\nThis book is inspired by and builds on the content of OpenStax Biology 2e (Rice University), which is openly available under a Creative Commons Attribution 4.0 International (CC BY 4.0) license."
+      },
+      "es": {
+        "slug": "biologia-volumen-iv",
+        "title": "Biología — Volumen IV: Forma y función",
+        "tagline": "El volumen más extenso: estructura y reproducción de las plantas, y los once grandes sistemas del cuerpo animal, del digestivo al inmunitario.",
+        "description": "Volumen IV de una serie de cinco: Forma y función. Este tomo abarca los capítulos 28–40 de Biology 2e.\n\nLa edición española comprende el texto íntegro de los capítulos y sus ejercicios, con una secuencia de vídeo para cada una de sus figuras, integrada a lo largo del texto. Hay tres versiones lingüísticas disponibles — española, francesa e inglesa — cada una en PDF completo, o por separado en volumen de teoría y volumen de ejercicios.\n\nEste libro se inspira y se apoya en el contenido de OpenStax Biology 2e (Rice University), disponible libremente bajo licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)."
+      }
+    },
+    {
+      "number": 5,
+      "featured": false,
+      "price": 3900,
+      "fr": {
+        "slug": "biologie-volume-v",
+        "title": "Biologie — Volume V : Écologie",
+        "tagline": "Des populations aux écosystèmes : dynamique des communautés, flux d’énergie, cycles biogéochimiques et biologie de la conservation.",
+        "description": "Volume V d’une série de cinq : Écologie. Ce tome couvre les chapitres 41–44 de Biology 2e.\n\nL’édition française comprend le texte intégral des chapitres et leurs exercices, accompagnés d’une séquence vidéo pour chacune de ses figures, intégrée au fil du texte. Trois versions linguistiques sont disponibles — française, espagnole et anglaise — chacune en PDF complet, ou séparément en volume de cours et volume d’exercices.\n\nCe livre s’inspire et s’appuie sur le contenu d’OpenStax Biology 2e (Rice University), disponible librement sous licence Creative Commons Attribution 4.0 International (CC BY 4.0)."
+      },
+      "en": {
+        "slug": "biology-volume-v",
+        "title": "Biology — Volume V: Ecology",
+        "tagline": "From populations to ecosystems: community dynamics, energy flows, biogeochemical cycles and conservation biology.",
+        "description": "Volume V of five: Ecology. This volume covers chapters 41–44 of Biology 2e.\n\nThe English edition carries the full text of the chapters and their exercises, together with a video clip for each of its figures, embedded throughout. Three language versions are available — English, French and Spanish — each as a complete PDF, or separately as a course volume and an exercise volume.\n\nThis book is inspired by and builds on the content of OpenStax Biology 2e (Rice University), which is openly available under a Creative Commons Attribution 4.0 International (CC BY 4.0) license."
+      },
+      "es": {
+        "slug": "biologia-volumen-v",
+        "title": "Biología — Volumen V: Ecología",
+        "tagline": "De las poblaciones a los ecosistemas: dinámica de las comunidades, flujos de energía, ciclos biogeoquímicos y biología de la conservación.",
+        "description": "Volumen V de una serie de cinco: Ecología. Este tomo abarca los capítulos 41–44 de Biology 2e.\n\nLa edición española comprende el texto íntegro de los capítulos y sus ejercicios, con una secuencia de vídeo para cada una de sus figuras, integrada a lo largo del texto. Hay tres versiones lingüísticas disponibles — española, francesa e inglesa — cada una en PDF completo, o por separado en volumen de teoría y volumen de ejercicios.\n\nEste libro se inspira y se apoya en el contenido de OpenStax Biology 2e (Rice University), disponible libremente bajo licencia Creative Commons Reconocimiento 4.0 Internacional (CC BY 4.0)."
+      }
+    }
+  ]
+}
