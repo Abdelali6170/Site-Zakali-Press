@@ -62,6 +62,14 @@ export function middleware(requete: NextRequest) {
   }
 
   // ── 4. Reecriture vers la clef interne ────────────────────────────────────
+  //
+  // La barre de navigation a besoin de savoir quelle page est courante, pour
+  // marquer le lien actif et pour que le selecteur de langue mene a la MEME
+  // page traduite (regle 7.4). Elle ne l'apprend PAS d'ici : un en-tete pose
+  // par le middleware forcerait l'enveloppe a se rendre a chaque requete, et
+  // ferait perdre la generation statique de toutes les pages. Elle lit le
+  // chemin cote navigateur, ou l'adresse est celle que le visiteur voit —
+  // /es/catalogo, et non la clef interne.
   const interne = ['', langue, page, ...reste].join('/');
   if (interne === pathname) return NextResponse.next();
   return NextResponse.rewrite(new URL(interne + search, requete.url));

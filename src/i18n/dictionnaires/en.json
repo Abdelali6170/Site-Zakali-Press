@@ -1,0 +1,22 @@
+{
+  "nav.principale": "Main navigation",
+  "nav.disciplines": "Subjects",
+  "nav.catalogue": "Catalogue",
+  "nav.toutLeCatalogue": "See the whole catalogue",
+  "nav.catalogueComplet": "Whole catalogue",
+  "nav.choisirLangue": "Choose a language",
+  "nav.langue": "Language",
+  "nav.compte": "Account",
+  "nav.espacePersonnel": "My library",
+  "nav.connexion": "Sign in",
+  "nav.inscription": "Create an account",
+  "nav.deconnexion": "Sign out",
+  "nav.ouvrirMenu": "Open the menu",
+  "nav.fermerMenu": "Close the menu",
+  "nav.allerAuContenu": "Skip to content",
+
+  "pied.liens": "The publishing house",
+  "pied.mentions": "Information",
+  "pied.accroche": "Reference editions, established and published with care.",
+  "pied.mention": "© {annee} Zakali Press. All rights reserved."
+}

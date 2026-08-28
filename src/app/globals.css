@@ -1,48 +1,36 @@
 /*
  * src/app/globals.css
- * Zakali Press — l'identité de la maison.
+ * Zakali Press — l'identité de la maison, et l'ossature.
  *
- * Reprise du site archivé : la charte avait été travaillée et validée, ce
- * n'était pas elle le probleme. Elle est ici posee AVANT la premiere page,
- * pour qu'aucune page n'invente sa propre couleur.
+ * Écrite de zéro. Le site archivé sert de référence visuelle : on le lance à
+ * côté et on compare. Aucune ligne n'en est recopiée.
  *
- * Une difference avec l'ancien site, et elle est assumee : la charte n'est
- * plus modifiable depuis une administration. Elle etait alimentee par des
- * variables CSS venues du contenu editorial ; elle est desormais dans le code.
- * Changer le bordeaux est devenu un commit.
+ * Les variables sont nommées PAR LEUR RÔLE, pas par leur couleur : le jour où
+ * la principale cesse d'être bordeaux, `--principale` reste vrai.
  */
 
 :root {
-  /* ── Couleurs ────────────────────────────────────────────────────────────
-   * Bordeaux profond et or : l'identite du site archive, reprise telle quelle.
-   */
-  --bordeaux: #4a0404;
-  --bordeaux-clair: #6b1010;
-  --or: #c5a059;
-  --or-clair: #d4b574;
+  /* ── Couleurs ─────────────────────────────────────────────────────────── */
+  --principale: #4a0404;
+  --principale-douce: #6b1010;
+  --accent: #c5a059;
+  --accent-doux: #d4b574;
 
   --encre: #0a0a0a;
-  --encre-douce: #6b6050;
+  --attenue: #6b6050;
 
-  --papier: #fafaf8;
+  --fond: #fafaf8;
   --sable: #f2ede4;
   --sable-profond: #e8dfd0;
 
-  /* ── Typographies ────────────────────────────────────────────────────────
-   * Les familles viennent de `next/font`, qui les heberge avec le site : pas
-   * de requete vers un tiers au chargement, et pas de saut de texte quand la
-   * police arrive.
-   */
+  /* ── Typographies ─────────────────────────────────────────────────────── */
   --titre: var(--police-titre), Georgia, 'Times New Roman', serif;
   --labeur: var(--police-labeur), system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* ── Mesures ─────────────────────────────────────────────────────────────
-   * Une seule echelle, pour que les espacements ne soient pas decides page
-   * par page.
-   */
-  --pas: 0.5rem;
-  --mesure: 68ch;
-  --rayon: 3px;
+  /* ── Mesures ──────────────────────────────────────────────────────────── */
+  --largeur: 1180px;
+  --marge: 1.5rem;
+  --hauteur-barre: 72px;
 }
 
 *,
@@ -53,10 +41,9 @@
 
 body {
   margin: 0;
-  background: var(--papier);
+  background: var(--fond);
   color: var(--encre);
   font-family: var(--labeur);
-  font-size: 1rem;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
@@ -72,27 +59,18 @@ h3 {
 }
 
 a {
-  color: var(--bordeaux);
+  color: var(--principale);
 }
 
-a:hover {
-  color: var(--bordeaux-clair);
-}
-
-/*
- * Le focus reste visible. Le retirer « parce que c'est plus propre » rend le
- * site inutilisable au clavier.
- */
 :focus-visible {
-  outline: 2px solid var(--or);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 /*
- * Une regle qui vient d'un bug paye comptant sur le site archive : la feuille
- * contraignait `img` mais pas `video`. Une sequence de figure s'affichait donc
- * a sa taille d'origine — 1920 px — et poussait toute la page en defilement
- * horizontal. La regle couvre les trois media, une fois pour toutes.
+ * Règle venue d'un bug payé comptant : la feuille archivée contraignait `img`
+ * mais pas `video`. Une séquence de figure s'affichait donc à sa taille
+ * d'origine — 1920 px — et poussait la page en défilement horizontal.
  */
 img,
 video,
@@ -106,15 +84,399 @@ audio {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   L'EN-TÊTE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.entete {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--fond);
+  border-bottom: 1px solid var(--sable-profond);
+}
+
+.barre {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 0 var(--marge);
+  height: var(--hauteur-barre);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.marque {
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.signature {
+  font-family: var(--titre);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+.signature-inverse {
+  color: var(--fond);
+}
+
+.liens {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.lien {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.85rem;
+  color: var(--attenue);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-family: var(--labeur);
+  border: none;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+}
+
+.lien:hover,
+.lien.est-courant {
+  color: var(--principale);
+  background: var(--sable);
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.bascule[aria-expanded='true'] {
+  color: var(--principale);
+  background: var(--sable);
+}
+
+.bascule[aria-expanded='true'] .chevron {
+  transform: rotate(180deg);
+}
+
+/* Le panneau est ancré sur toute la largeur, d'où un positionnement statique
+   sur son porteur. */
+.deroulant {
+  position: static;
+}
+
+/* ── Le mégamenu ───────────────────────────────────────────────────────────
+ * `hidden` doit rester efficace. C'est le défaut F-19 de l'audit : une règle
+ * d'affichage l'annulait, et le panneau fermé restait lu par les lecteurs
+ * d'écran et atteignable au clavier.
+ */
+.mega {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--hauteur-barre);
+  background: var(--fond);
+  border-top: 2px solid var(--accent);
+  border-bottom: 1px solid var(--sable-profond);
+  box-shadow: 0 18px 40px -28px rgb(0 0 0 / 50%);
+}
+
+.mega[hidden] {
+  display: none;
+}
+
+.mega-corps {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 2rem var(--marge);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 2rem;
+}
+
+.mega-titre {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 0.6rem;
+  margin: 0 0 0.6rem;
+  border-bottom: 1px solid var(--sable-profond);
+}
+
+.mega-colonne ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mega-colonne a {
+  display: block;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  color: var(--attenue);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.mega-colonne a:hover {
+  color: var(--principale);
+  background: var(--sable);
+}
+
+.mega-pied {
+  background: var(--sable);
+  padding: 0.85rem var(--marge);
+  text-align: center;
+}
+
+.mega-pied a {
+  color: var(--principale);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.mega-pied a:hover {
+  text-decoration: underline;
+}
+
+/* ── Actions de droite ───────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.langues {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.langue {
+  padding: 0.3rem 0.45rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--attenue);
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.langue:hover {
+  color: var(--principale);
+  background: var(--sable);
+}
+
+.langue.est-courant {
+  color: var(--principale);
+  font-weight: 600;
+}
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.bouton-principal {
+  background: var(--principale);
+  color: var(--fond);
+}
+
+.bouton-principal:hover {
+  background: var(--principale-douce);
+  color: var(--fond);
+}
+
+/* ── La barre repliée ────────────────────────────────────────────────────── */
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--encre);
+}
+
+.menu-mobile {
+  display: none;
+  padding: 1rem var(--marge) 1.5rem;
+  border-top: 1px solid var(--sable-profond);
+  background: var(--fond);
+}
+
+.menu-mobile:not([hidden]) {
+  display: block;
+}
+
+.mobile-titre {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 1rem 0 0.4rem;
+}
+
+.mobile-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mobile-liste a {
+  display: block;
+  padding: 0.45rem 0;
+  color: var(--attenue);
+  text-decoration: none;
+}
+
+.mobile-liste a:hover {
+  color: var(--principale);
+}
+
+@media (max-width: 900px) {
+  .liens,
+  .actions {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mega {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LE PIED DE PAGE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.pied {
+  margin-top: 4rem;
+  background: var(--encre);
+  color: var(--sable-profond);
+}
+
+.pied-corps {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 3rem var(--marge) 2rem;
+  display: grid;
+  grid-template-columns: 2fr repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2.5rem;
+}
+
+.pied-accroche {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--attenue);
+  max-width: 40ch;
+}
+
+.pied-titre {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+
+.pied-colonne ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pied-colonne a {
+  color: var(--sable-profond);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.pied-colonne a:hover {
+  color: var(--accent-doux);
+}
+
+.pied-bas {
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.pied-bas p {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 1.25rem var(--marge);
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+@media (max-width: 700px) {
+  .pied-corps {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LE CORPS DE PAGE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.contenu {
+  min-height: 50vh;
+}
+
+.enveloppe {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 3rem var(--marge);
+}
+
 /*
  * ── Thème sombre : décision ouverte ──────────────────────────────────────
- * Le site archivé n'en avait pas. Une page de lecture longue en gagnerait,
- * mais le bordeaux et l'or demandent d'être retravaillés pour tenir sur fond
- * sombre — ce n'est pas une inversion mécanique. À trancher avec les pages,
- * pas avant.
+ * Le site archivé n'en avait pas. Le bordeaux et l'or demandent d'être
+ * retravaillés pour tenir sur fond sombre — ce n'est pas une inversion
+ * mécanique. À trancher avec les pages.
  */
