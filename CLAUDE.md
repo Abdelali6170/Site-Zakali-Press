@@ -145,11 +145,34 @@ Les clefs de route — `catalogue`, `lire`, `compte` — sont des **identifiants
 internes** qui ressemblent au français. Ce ne sont pas les adresses françaises,
 que porte la table des segments : `/es/catalogo`, `/en/read`.
 
+## Le quai, tel qu'il est aujourd'hui
+
+Un seul ouvrage y est posé, `biology-2e` — cinq volumes, trois langues, environ
+dix gigaoctets. **Le nom du dossier d'un ouvrage EST son identifiant de
+manifeste** : c'est ce qui permet au manifeste de ne porter aucun chemin.
+
+`outils/normaliser-quai.ts` a amené le quai d'atelier à cette forme. Il est **à
+usage unique et destiné à être supprimé** le jour où l'atelier dépose déjà en
+forme canonique. Rien du site ne l'importe ; le relancer sur un quai rangé ne
+fait rien et le dit.
+
 ## État
 
 **Phase 1 — le socle.** Routage par langue avec adresses traduites, vérification
-continue, premiers tests. Les pages sont provisoires : elles existent pour
-prouver que la chaîne tient.
+continue, premiers tests. Les pages sont provisoires.
 
-Restent : la chaîne de l'ouvrage · l'index comme artefact versionné · le catalogue
-issu de l'index · le contenu éditorial · le stockage objet · la mise en ligne.
+**Phase 2 — la chaîne de l'ouvrage.** Le manifeste, chargé et refusé s'il est
+douteux. La lecture du quai : chapitres depuis le sommaire, licence depuis la
+préface, figures depuis la narration. L'index, avec ses niveaux d'accès, écrit
+en artefact versionné dans `donnees/index.json` par `npm run index`.
+
+> Les tests tournent contre les deux ouvrages d'essai **et contre le quai
+> réel** — ces derniers s'ignorent d'eux-mêmes quand `LIVRES_DIR` n'est pas là,
+> pour qu'un poste neuf ne soit pas rouge par conception.
+
+Restent : le catalogue issu de l'index · le contenu éditorial · le stockage
+objet · la mise en ligne.
+
+`src/contenu/disciplines.ts` est toujours la couture provisoire : l'index sait
+désormais les disciplines, mais les servir aux composants demande un chargement
+côté serveur, qui vient avec le catalogue.
