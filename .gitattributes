@@ -1,0 +1,19 @@
+# Le depot stocke des fins de ligne LF, quel que soit le poste.
+#
+# Sans cette regle, un fichier ecrit sous Windows entre en CRLF, et la
+# verification continue — qui tourne sous Linux — voit un fichier different a
+# chaque modification. Le bruit finit par masquer les vraies differences.
+* text=auto eol=lf
+
+# Fichiers binaires : jamais convertis.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.mp3 binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary

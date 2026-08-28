@@ -1,0 +1,39 @@
+# ── Dependances ──────────────────────────────────────────────────────────────
+/node_modules
+
+# ── Construction Next.js ─────────────────────────────────────────────────────
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+
+# ── Secrets ──────────────────────────────────────────────────────────────────
+# Le .env porte la chaine de connexion a la base et les clefs du stockage objet.
+# Il n'entre JAMAIS dans le depot, prive ou non : un depot prive n'est pas un
+# coffre. En production, ces valeurs vivent dans les variables du panneau.
+# .env.example EST versionne — c'est le gabarit, sans valeurs.
+.env
+.env.local
+.env*.local
+
+# ── Le quai de livraison ─────────────────────────────────────────────────────
+# Les ouvrages finis que l'atelier depose. Plusieurs gigaoctets, jamais
+# versionnes. Leur emplacement se declare par LIVRES_DIR dans le .env.
+/Livres/
+
+# ── Sorties de tests ─────────────────────────────────────────────────────────
+# Les tests EUX-MEMES sont versionnes ; seules leurs sorties sont ignorees.
+/coverage
+/test-results
+/playwright-report
+
+# ── Editeurs et systeme ──────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── Claude Code ──────────────────────────────────────────────────────────────
+# .claude/ est versionne (configuration partagee) ; seul le local est ignore.
+.claude/settings.local.json

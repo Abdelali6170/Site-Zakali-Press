@@ -1,0 +1,31 @@
+/*
+ * src/app/globals.css
+ * Zakali Press — styles globaux.
+ *
+ * Volontairement nu a ce stade. La charte viendra avec les pages, a la phase 5.
+ *
+ * Une seule regle est deja la, et elle vient d'un bug paye comptant sur le
+ * projet precedent : la feuille contraignait `img` mais pas `video`. Une
+ * sequence de figure s'affichait alors a sa taille d'origine — 1920 px — et
+ * poussait toute la page en defilement horizontal. La regle couvre les trois
+ * media, une fois pour toutes.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+img,
+video,
+audio {
+  max-width: 100%;
+  height: auto;
+}

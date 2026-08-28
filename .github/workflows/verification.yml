@@ -1,0 +1,38 @@
+name: Vérification
+
+# Le site se deploie au push. Sans cette verification, une erreur de type ou un
+# test casse ne se decouvrirait qu'en production.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer
+        run: npm ci
+
+      - name: Types
+        run: npm run typecheck
+
+      - name: Style
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      # La construction est verifiee ici plutot que decouverte a l'arrivee :
+      # Hostinger garde la version precedente en ligne quand un build echoue,
+      # et le symptome — une page en 404 apres un push — ressemble a un bug
+      # applicatif alors que c'est le deploiement qui n'a pas eu lieu.
+      - name: Construction
+        run: npm run build
