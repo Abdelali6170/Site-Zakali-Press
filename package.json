@@ -13,20 +13,29 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "index": "tsx outils/fabriquer-index.ts",
+    "extraits": "tsx outils/relier-extraits.ts",
+    "quai:normaliser": "tsx outils/normaliser-quai.ts",
+    "verser": "tsx outils/verser.ts",
+    "verifier": "tsx outils/verifier.ts"
   },
   "dependencies": {
-    "next": "^16.3.3",
+    "next": "^16.4.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/ssh2-sftp-client": "^9.0.6",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^16.3.3",
+    "eslint-config-next": "^16.4.3",
+    "pdf-lib": "^1.17.1",
+    "ssh2-sftp-client": "^12.1.1",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.0",
     "vitest": "^4.1.11"
   }

@@ -19,6 +19,7 @@
  * Composant client : c'est le seul de l'ossature a avoir besoin d'etat.
  */
 
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
@@ -39,10 +40,18 @@ export default function EnTete({ langue, nomDeLaMaison, familles, enAvant }: Pro
 
   // La page courante se lit dans le chemin, cote navigateur : l'adresse y est
   // celle que le visiteur voit — /es/catalogo — et non la clef interne vers
-  // laquelle le middleware a reecrit. Passer par un en-tete du middleware
+  // laquelle le proxy a reecrit. Passer par un en-tete du proxy
   // aurait force l'enveloppe a se rendre a chaque requete, et fait perdre la
   // generation statique.
-  const page = routeDe(usePathname() ?? '')?.page ?? null;
+  const route = routeDe(usePathname() ?? '');
+  const page = route?.page ?? null;
+
+  // Regle 7.4 — changer de langue mene a la MEME page traduite. Depuis une
+  // fiche, l'identifiant est garde tel quel, meme s'il est celui d'une autre
+  // langue : la fiche le reconnait et redirige vers sa propre edition. Le
+  // composant n'a donc pas a connaitre les identifiants traduits.
+  const versLangue = (autre: Langue) =>
+    chemin(autre, page ?? 'accueil', { slug: page ? (route?.slug ?? undefined) : undefined });
 
   const [panneauOuvert, setPanneauOuvert] = useState(false);
   const [menuOuvert, setMenuOuvert] = useState(false);
@@ -90,7 +99,15 @@ export default function EnTete({ langue, nomDeLaMaison, familles, enAvant }: Pro
     <header className="entete">
       <nav className="barre" aria-label={t('nav.principale')}>
         <a className="marque" href={chemin(langue, 'accueil')}>
-          <span className="signature">{nomDeLaMaison}</span>
+          {/* Le logo porte deja le nom : il en devient le texte alternatif. */}
+          <Image
+            className="logo"
+            src="/images/logo-zakali-press.png"
+            alt={nomDeLaMaison}
+            width={1199}
+            height={312}
+            preload
+          />
         </a>
 
         <ul className="liens">
@@ -168,7 +185,7 @@ export default function EnTete({ langue, nomDeLaMaison, familles, enAvant }: Pro
                 <a
                   key={autre.code}
                   className={`langue${courante ? ' est-courant' : ''}`}
-                  href={chemin(autre.code, page ?? 'accueil')}
+                  href={versLangue(autre.code)}
                   hrefLang={autre.htmlLang}
                   lang={autre.htmlLang}
                   aria-current={courante ? true : undefined}
@@ -223,7 +240,7 @@ export default function EnTete({ langue, nomDeLaMaison, familles, enAvant }: Pro
           {LANGUES.map((autre) => (
             <li key={autre.code}>
               <a
-                href={chemin(autre.code, page ?? 'accueil')}
+                href={versLangue(autre.code)}
                 hrefLang={autre.htmlLang}
                 lang={autre.htmlLang}
                 aria-current={autre.code === langue ? true : undefined}

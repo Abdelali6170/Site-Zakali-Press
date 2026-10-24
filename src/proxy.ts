@@ -1,5 +1,5 @@
 /**
- * src/middleware.ts
+ * src/proxy.ts
  * Zakali Press — la porte d'entree des adresses.
  *
  * Trois choses, et rien d'autre :
@@ -16,9 +16,12 @@
  * le routeur de Next trouverait le dossier `catalogue` et ne verrait pas le
  * probleme. C'est ici, et seulement ici, que le 404 est prononce.
  *
- * `/contenu/…` ne passe pas par ce middleware : ces adresses portent deja leur
+ * `/contenu/…` ne passe pas par ce proxy : ces adresses portent deja leur
  * langue a l'interieur, et une page de chapitre appelle ses images en relatif —
  * un prefixe les casserait.
+ *
+ * Next 16 appelle « proxy » ce qu'il appelait « middleware », et ne garde
+ * l'ancien nom que deprecie. Le proxy tourne sur Node, comme le reste du site.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
@@ -28,7 +31,17 @@ import { pageDepuisSegment } from '@/i18n/segments';
 
 const COOKIE_LANGUE = 'zk.langue';
 
-export function middleware(requete: NextRequest) {
+/** Le segment survit aux deux decodages que Next lui fera subir. */
+function seDecodeProprement(segment: string): boolean {
+  try {
+    decodeURIComponent(decodeURIComponent(segment));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function proxy(requete: NextRequest) {
   const { pathname, search } = requete.nextUrl;
   const morceaux = pathname.split('/').filter(Boolean);
   const [premier, deuxieme, ...reste] = morceaux;
@@ -55,7 +68,11 @@ export function middleware(requete: NextRequest) {
 
   // ── 3. Le segment appartient-il a CETTE langue ? ──────────────────────────
   const page = pageDepuisSegment(langue, deuxieme);
-  if (!page) {
+  // Un identifiant qui ne se decode pas proprement ne designe rien non plus.
+  // Next decode les parametres de route une seconde fois, et `100%25` ou
+  // `%E9t%E9` le font echouer en 500 (« failed to decode param ») avant que la
+  // page ait pu repondre 404.
+  if (!page || !reste.every(seDecodeProprement)) {
     // Aucune page ne porte ce mot dans cette langue. On reecrit vers une
     // adresse sans route : Next rend alors sa page « introuvable ».
     return NextResponse.rewrite(new URL(`/${langue}/_introuvable`, requete.url));
@@ -66,7 +83,7 @@ export function middleware(requete: NextRequest) {
   // La barre de navigation a besoin de savoir quelle page est courante, pour
   // marquer le lien actif et pour que le selecteur de langue mene a la MEME
   // page traduite (regle 7.4). Elle ne l'apprend PAS d'ici : un en-tete pose
-  // par le middleware forcerait l'enveloppe a se rendre a chaque requete, et
+  // par le proxy forcerait l'enveloppe a se rendre a chaque requete, et
   // ferait perdre la generation statique de toutes les pages. Elle lit le
   // chemin cote navigateur, ou l'adresse est celle que le visiteur voit —
   // /es/catalogo, et non la clef interne.

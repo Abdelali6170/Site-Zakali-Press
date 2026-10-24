@@ -65,7 +65,7 @@ souvent sa réponse là-bas, écrite sur place.
 | Sessions | **cookie signé** — un visiteur anonyme ne touche jamais la base |
 | Contenu éditorial | **dans les fichiers du dépôt**, lu au démarrage. Pas d'administration du contenu |
 | Ouvrages | **un manifeste par ouvrage** ; le catalogue vient de l'index. **Il n'y a pas de table des ouvrages** |
-| Fichiers d'ouvrage | stockage objet compatible S3, **reporté** au jour de la publication |
+| Fichiers d'ouvrage | un **site de fichiers** PHP/HTML sur la même offre Hostinger (Cloud Startup), au disque permanent — **pas de stockage objet**. Voir [`fichiers/LISEZMOI.md`](fichiers/LISEZMOI.md) |
 | Langue du code | **français** — identifiants, commentaires, noms de fichiers |
 | Interface | **l'identité du site archivé est reprise, la mise en page est revue** |
 
@@ -97,12 +97,15 @@ administration.** Changer le bordeaux est devenu un commit.
 
 ## Le piège qui casserait en silence
 
-Une page de chapitre appelle ses images en **relatif**. La rediriger vers une
-adresse signée changerait la base d'adresse du navigateur : les images
-partiraient droit au stockage objet, **hors contrôle d'accès**, et échoueraient.
+Une page de chapitre appelle ses images en **relatif**, et une feuille de style
+ses polices. Les rediriger vers une adresse signée changerait la base d'adresse
+du navigateur : images et polices partiraient droit au site de fichiers, **hors
+contrôle d'accès**, et échoueraient.
 
-> **Les pages HTML sont RELAYÉES par le site. Tout le reste est REDIRIGÉ** vers
-> une adresse signée de quelques minutes.
+> **Ce qui porte des liens est RELAYÉ par le site** — pages, feuilles, scripts,
+> polices, narration, et les couvertures que lit l'optimiseur d'images. **Le
+> poids est REDIRIGÉ** — images, vidéos, PDF — vers une adresse signée
+> (règle 8.4).
 
 ## Ce qui ne se déclare pas, et ce qui se lit
 
@@ -145,11 +148,90 @@ Les clefs de route — `catalogue`, `lire`, `compte` — sont des **identifiants
 internes** qui ressemblent au français. Ce ne sont pas les adresses françaises,
 que porte la table des segments : `/es/catalogo`, `/en/read`.
 
+## Le quai, tel qu'il est aujourd'hui
+
+Un seul ouvrage y est posé, `biology-2e` — cinq volumes, trois langues, environ
+neuf gigaoctets. Le quai vit dans `c:\OpenStax\Zakali_Edition\Livres`
+(`LIVRES_DIR`) ; le quai d'avant la livraison du 24 octobre 2026, avec ses MP3,
+est conservé dans `C:\OpenStax\Sauvegardes\`. **Le nom du dossier d'un ouvrage EST son identifiant de
+manifeste** : c'est ce qui permet au manifeste de ne porter aucun chemin.
+
+`outils/normaliser-quai.ts` amène une livraison d'atelier à cette forme. Prévu à
+usage unique, il sert **à chaque livraison** tant que l'atelier livre dans sa
+propre forme (PDF à plat, `html/`, `media/En`, `extraits/`) — celle du 24 octobre
+2026 y est passée. Il sera supprimé le jour où l'atelier dépose en forme
+canonique. Rien du site ne l'importe ; le relancer sur un quai rangé ne fait rien
+et le dit.
+
+### Après chaque livraison, dans cet ordre
+
+```
+npm run quai:normaliser -- biology-2e              # à blanc, puis --appliquer
+npm run extraits -- --domaine https://zakalipress.com --appliquer
+npm run index
+npm run verser                                     # à blanc, puis --appliquer
+```
+
+Verser **avant** de pousser l'index : le site signe ce que dit son index, et un
+fichier indexé mais pas encore versé répond 404.
+
+Les **extraits PDF** livrés gardent les liens de l'atelier (un miroir appelé à
+disparaître, le disque de l'éditeur). `npm run extraits` en fabrique une copie
+reliée à la liseuse du site dans `derives/` — hors dépôt, hors quai — et **seule
+cette copie est servie** (règle 6.7). Un extrait non relié, ou relié avant sa
+livraison, sort de l'index. Le domaine gravé, `https://zakalipress.com`, a été
+choisi par l'éditeur : un lien gravé dans un PDF téléchargé ne se corrige plus.
+
+### Ce que le quai porte et qui n'est pas de lui
+
+Chaque `vol-N/<langue>/covers/Biology_vol1.png` est un **rapiéçage** : le HTML de
+l'atelier appelle ce nom dans les quinze volumes sans livrer l'image. Chacun
+porte la bonne couverture de son volume. Une livraison non corrigée l'effacera.
+
 ## État
 
 **Phase 1 — le socle.** Routage par langue avec adresses traduites, vérification
-continue, premiers tests. Les pages sont provisoires : elles existent pour
-prouver que la chaîne tient.
+continue, premiers tests. Les pages sont provisoires.
 
-Restent : la chaîne de l'ouvrage · l'index comme artefact versionné · le catalogue
-issu de l'index · le contenu éditorial · le stockage objet · la mise en ligne.
+**Phase 2 — la chaîne de l'ouvrage.** Le manifeste, chargé et refusé s'il est
+douteux. La lecture du quai : chapitres depuis le sommaire, licence depuis la
+préface, figures depuis la narration. L'index, avec ses niveaux d'accès, écrit
+en artefact versionné dans `donnees/index.json` par `npm run index`.
+
+> Les tests tournent contre les deux ouvrages d'essai **et contre le quai
+> réel** — ces derniers s'ignorent d'eux-mêmes quand `LIVRES_DIR` n'est pas là,
+> pour qu'un poste neuf ne soit pas rouge par conception.
+
+**Phase 3 — le site public.** L'accueil (textes dans
+`src/contenu/editorial/accueil.json`, chiffres et ouvrages depuis l'index), le
+catalogue rangé par œuvre, la fiche d'un volume, la **liseuse**
+(`/fr/lire/<slug>?chapitre=N&figure=…`) qui montre le volume dans un cadre sous
+l'en-tête, la page d'un chapitre réservé, l'extrait PDF à télécharger. Les
+disciplines se déduisent de l'index (`src/contenu/disciplines.ts`).
+
+La **porte** `/contenu/<adresse>` (`src/porte/`) décide seule : offert servi,
+réservé en 403, hors index en 404.
+
+Deux défauts trouvés en route, et figés par des tests : `<link rel="next">`
+offrait le chapitre 2 de chaque édition (règle 4.3) ; aucune vidéo de figure ne
+se lisait, la page les cherchant sous son propre dossier (règle 4.7).
+
+**Phase 4 — la mise en ligne, préparée, pas faite.** La porte livre selon la
+configuration : depuis le quai sur le poste (`stockage-local.ts`), depuis le
+**site de fichiers** en ligne (`stockage-distant.ts`, `FICHIERS_URL` et
+`FICHIERS_SECRET` ; une seule des deux arrête le démarrage). Le site de
+fichiers est `fichiers/porte.php`, déployé à la main : il vérifie une signature
+HMAC et sert les plages, les livres rangés hors de `public_html`.
+`npm run verser` y envoie le quai par SFTP ; `npm run verifier -- <site>`
+contrôle un site en ligne. L'indexation est fermée tant que `INDEXATION` ne
+vaut pas `ouverte`. Le proxy de Next 16 est `src/proxy.ts`.
+
+> Les tests de `porte.php` demandent PHP sur le poste (`PHP_BIN`) ; sans lui,
+> ils s'ignorent.
+
+Avant tout push : savoir à quelle Web App le dépôt est relié (hPanel,
+*Deployments* : `tan-dog-933624` et `tan-crane-859173.hostingersite.com`).
+Le miroir ouvert ne se ferme qu'après que les PDF complets ont été reliés.
+
+Restent : le site de fichiers et la Web App à créer, le domaine · les comptes et
+l'achat.

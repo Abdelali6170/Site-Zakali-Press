@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+import { EXCLUSION, indexationOuverte } from './src/site/indexation';
+
 /**
  * Zakali Press — configuration Next.js.
  *
@@ -18,6 +20,14 @@ const nextConfig: NextConfig = {
 
   // L'en-tete par defaut de Next revele la version du cadriciel.
   poweredByHeader: false,
+
+  // Regle 10.4 — fermee, l'indexation l'est aussi par en-tete, sur toute
+  // reponse, `/contenu/…` compris. Une Web App n'a pas de frontal ou le poser :
+  // c'est l'application qui s'en charge.
+  async headers() {
+    if (indexationOuverte(process.env)) return [];
+    return [{ source: '/:chemin*', headers: [EXCLUSION] }];
+  },
 };
 
 export default nextConfig;

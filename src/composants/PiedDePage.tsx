@@ -9,6 +9,8 @@
  * page renvoyait vers des rubriques vides.
  */
 
+import Image from 'next/image';
+
 import type { Discipline } from '@/contenu/disciplines';
 import type { Langue } from '@/i18n/langues';
 import { chemin } from '@/i18n/segments';
@@ -28,7 +30,15 @@ export default function PiedDePage({ langue, nomDeLaMaison, enAvant, annee }: Pr
     <footer className="pied">
       <div className="pied-corps">
         <div className="pied-marque">
-          <span className="signature signature-inverse">{nomDeLaMaison}</span>
+          {/* Variante claire : le texte du logo d'origine, brun fonce, se perdrait
+              sur le fond sombre. L'embleme garde ses couleurs. */}
+          <Image
+            className="pied-logo"
+            src="/images/logo-zakali-press-clair.png"
+            alt={nomDeLaMaison}
+            width={1199}
+            height={312}
+          />
           <p className="pied-accroche">{t('pied.accroche')}</p>
         </div>
 

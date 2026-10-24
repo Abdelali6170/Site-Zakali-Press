@@ -1,0 +1,81 @@
+{
+  "$commentaire": [
+    "Zakali Press — le contenu editorial de l'accueil (regle 7.3).",
+    "",
+    "Ces textes appartiennent a l'editeur : on les reecrit ici, sans toucher au code.",
+    "Les chiffres et les ouvrages de la page, eux, viennent de l'index — ils ne",
+    "s'ecrivent nulle part."
+  ],
+
+  "fr": {
+    "surtitre": "Maison d’édition",
+    "titre": "Des ouvrages de référence, faits pour être lus",
+    "accroche": "Zakali Press publie des ouvrages de référence en plusieurs langues : le texte intégral à lire en ligne, chaque figure commentée en vidéo, et les fichiers PDF de cours et d’exercices.",
+    "promesses": [
+      {
+        "titre": "Le texte intégral, en ligne",
+        "texte": "Chaque volume se lit dans le navigateur, chapitre par chapitre, avec son sommaire et sa recherche."
+      },
+      {
+        "titre": "Chaque figure, expliquée en vidéo",
+        "texte": "Une courte séquence commentée accompagne les figures, au fil du texte, au moment où on en a besoin."
+      },
+      {
+        "titre": "Cours et exercices en PDF",
+        "texte": "Le volume complet, ou séparément le cours et les exercices : à garder, à annoter, à imprimer."
+      }
+    ],
+    "appel": {
+      "titre": "Commencez par le premier chapitre",
+      "texte": "Il est offert dans chaque volume. Lisez-le avant de choisir."
+    }
+  },
+
+  "en": {
+    "surtitre": "Publishing house",
+    "titre": "Reference books, made to be read",
+    "accroche": "Zakali Press publishes reference books in several languages: the full text to read online, every figure explained on video, and PDF files for the course and the exercises.",
+    "promesses": [
+      {
+        "titre": "The full text, online",
+        "texte": "Each volume can be read in the browser, chapter by chapter, with its contents and its search."
+      },
+      {
+        "titre": "Every figure, explained on video",
+        "texte": "A short narrated clip accompanies the figures, throughout the text, right where you need it."
+      },
+      {
+        "titre": "Course and exercises as PDF",
+        "texte": "The complete volume, or the course and the exercises separately: to keep, to annotate, to print."
+      }
+    ],
+    "appel": {
+      "titre": "Start with the first chapter",
+      "texte": "It is free in every volume. Read it before you choose."
+    }
+  },
+
+  "es": {
+    "surtitre": "Editorial",
+    "titre": "Obras de referencia, hechas para ser leídas",
+    "accroche": "Zakali Press publica obras de referencia en varios idiomas: el texto íntegro para leer en línea, cada figura explicada en vídeo y los archivos PDF de teoría y de ejercicios.",
+    "promesses": [
+      {
+        "titre": "El texto íntegro, en línea",
+        "texte": "Cada volumen se lee en el navegador, capítulo a capítulo, con su índice y su búsqueda."
+      },
+      {
+        "titre": "Cada figura, explicada en vídeo",
+        "texte": "Una breve secuencia comentada acompaña a las figuras, a lo largo del texto, justo donde hace falta."
+      },
+      {
+        "titre": "Teoría y ejercicios en PDF",
+        "texte": "El volumen completo, o por separado la teoría y los ejercicios: para guardar, anotar e imprimir."
+      }
+    ],
+    "appel": {
+      "titre": "Empiece por el primer capítulo",
+      "texte": "Es gratuito en cada volumen. Léalo antes de elegir."
+    }
+  }
+}

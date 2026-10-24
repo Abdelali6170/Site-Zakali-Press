@@ -10,7 +10,7 @@
  *
  * Le routeur de Next associe une route a un NOM DE DOSSIER, et un dossier ne
  * peut pas s'appeler de trois façons. Les dossiers portent donc la CLEF de la
- * page — `catalogue`, `lire`, `compte` — et le middleware traduit l'adresse
+ * page — `catalogue`, `lire`, `compte` — et le proxy traduit l'adresse
  * entrante vers cette clef.
  *
  * La clef ressemble au francais parce qu'il faut bien choisir une langue pour
@@ -82,6 +82,32 @@ export function chemin(
   }
   const requete = params.toString();
   return requete ? `${base}?${requete}` : base;
+}
+
+/**
+ * Adresse de la liseuse : le sommaire du volume, ou l'un de ses chapitres.
+ *
+ * `rang` est la place du chapitre dans le sommaire, a partir de 1 — et non son
+ * numero : `chapter_31a` et `chapter_31b` portent le meme numero (regle 2.3).
+ *
+ * `figure` est le nom de base d'une figure de ce chapitre : la liseuse s'y
+ * rend et ouvre sa video. C'est la cible des liens des extraits (regle 6.5).
+ */
+export function cheminDeLecture(langue: Langue, slug: string, rang?: number, figure?: string): string {
+  return chemin(langue, 'lire', {
+    slug,
+    requete: rang ? { chapitre: rang, figure } : undefined,
+  });
+}
+
+/**
+ * Adresse publique d'un fichier d'ouvrage, depuis son adresse d'index.
+ *
+ * Regle 7.2 — pas de prefixe de langue : l'adresse porte deja la sienne, a
+ * l'interieur, et une page de chapitre appelle ses images en relatif.
+ */
+export function cheminDeContenu(adresse: string): string {
+  return `/contenu/${adresse.split('/').map(encodeURIComponent).join('/')}`;
 }
 
 /**

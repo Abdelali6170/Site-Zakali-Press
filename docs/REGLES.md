@@ -38,16 +38,24 @@ l'atelier — **ne regarde pas le site**.
 ```
 <quai>/<ouvrage>/
   <volume>/<langue>/            le site HTML du volume
-  pdf/<langue>/                 les PDF
+  <volume>/pdf/<langue>/        les PDF de ce volume
+  <volume>/couverture/<langue>.png
+  <volume>/extrait/<langue>.pdf    l'extrait gratuit, quand l'ouvrage en offre un
   media/<langue>/narration/chNN/
   media/<langue>/video/chNN/
   media/<langue>/audio/chNN/
-  couverture/<langue>.png
 ```
 
 **Le manifeste ne porte donc aucun chemin.** Ni dossier de volume, ni dossier de
 chapitres, ni suffixe de langue, ni gabarit de nom de PDF, ni racine de
 couvertures : la place de chaque chose est connue d'avance.
+
+**Le volume porte tout ce qui le concerne ; l'ouvrage ne porte que les médias.**
+Un ouvrage à cinq volumes a cinq couvertures et cinq jeux de PDF : les ranger au
+niveau de l'ouvrage obligerait à relire un nom de fichier pour savoir quel volume
+il sert — un gabarit de nom réintroduit là où cette règle vient de les supprimer.
+Les médias, eux, restent à l'ouvrage : les chapitres y sont numérotés d'un seul
+tenant sur tout l'ouvrage, `ch01` à `ch44`, sans égard aux volumes.
 
 > **Pourquoi** — les arborescences de production divergent d'un ouvrage à
 > l'autre : `chapitres_fr` chez l'un, `chapters_fr` chez l'autre, `covers` ici et
@@ -59,6 +67,21 @@ couvertures : la place de chaque chose est connue d'avance.
 >
 > **Figé par** — le test à deux ouvrages d'essai monte deux quais de forme
 > identique, l'un à deux volumes et deux langues, l'autre à volume unique.
+
+### 1.2 bis — Le quai fixe l'extérieur d'un volume, jamais son intérieur
+
+La forme est imposée jusqu'au dossier `<volume>/<langue>/`. **En dessous, rien
+n'est imposé** : `chapters/chapter_01.html` chez l'un et
+`chapitres_fr/chapter_01.fr.html` chez l'autre sont deux cas normaux.
+
+> **Pourquoi** — l'intérieur d'un volume n'a pas besoin d'être fixé, parce qu'il
+> n'est jamais deviné : le sommaire donne l'adresse de chaque chapitre, une page
+> donne l'adresse de ses images (règle 2.1). Fixer ce qui se lit déjà coûterait
+> une réécriture des pages à chaque livraison, pour rien.
+>
+> Cela dit aussi ce que la normalisation d'un quai a le droit de toucher : les
+> dossiers extérieurs, et eux seuls. Une normalisation qui entre dans un volume
+> casse les liens relatifs de ses pages.
 
 ### 1.3 — Le manifeste vit avec le code, pas avec les ouvrages
 
@@ -263,8 +286,8 @@ ni à une clef de stockage. Une adresse absente de l'index n'atteint rien.
 
 ### 4.2 — L'adresse garde la forme d'un chemin
 
-`<clef d'œuvre>/<langue>/<chemin dans le volume>`. Cette adresse est aussi la clef
-du fichier dans le stockage objet.
+`<clef d'œuvre>/<langue>/<chemin dans le volume>`. Cette adresse est aussi la place
+du fichier sur le site de fichiers, sous le dossier des livres.
 
 > **Pourquoi** — une page de chapitre appelle ses images en relatif et ses feuilles
 > en `../`. Un identifiant opaque casserait ces liens. La sécurité ne repose pas
@@ -301,6 +324,19 @@ ouvrages.**
 > **Pourquoi** — c'est le défaut central de l'ancien code : un ouvrage y existait
 > en trois exemplaires, et deux scripts servaient à les tenir d'accord. Une seule
 > vérité, une seule dérivation.
+
+### 4.7 — Un média appelé depuis le dossier d'une page renvoie à son adresse canonique
+
+Une page de chapitre calcule l'adresse de ses vidéos en relatif, depuis son
+dossier : `chapitres_fr/media/video/ch01/…`. Les médias vivent à l'ouvrage, et
+l'index les connaît à `media/video/ch01/…` de l'édition. La porte renvoie de l'une
+à l'autre — si l'adresse canonique est indexée, dans la même édition — et le droit
+s'y vérifie comme pour tout fichier.
+
+> **Pourquoi** — sans ce renvoi, aucune vidéo de figure ne se lisait : la page
+> recevait un 404 et se rabattait en silence sur l'image agrandie. L'adresse
+> calculée vit dans le script de la page, pas dans son balisage : la lecture de la
+> page (règle 4.3) ne pouvait pas la relever.
 
 ### 4.6 — La fabrication inspecte le quai et dit ce qui cloche
 
@@ -449,6 +485,18 @@ geste de l'éditeur.
 > **Pourquoi** — ce sont les fichiers de production de la maison. Et un master
 > remis à un acheteur ne doit pas désigner un hôte de recette.
 
+### 6.7 — L'extrait servi est un dérivé du site, jamais le fichier livré
+
+L'extrait posé sur le quai garde les liens de l'atelier. Le site en fabrique une
+copie aux liens réécrits (`npm run extraits`) dans `derives/`, hors dépôt et hors
+quai — le quai reste en lecture seule. **Seule cette copie entre dans l'index** ;
+un extrait livré mais pas encore relié n'est servi à personne, et le rapport le
+dit. Un extrait relié plus ancien que sa livraison est signalé, et n'est plus servi.
+
+> **Pourquoi** — l'extrait livré désigne le miroir de l'atelier, qui disparaîtra.
+> Le servir tel quel distribuerait des liens morts dans un fichier qu'on ne peut
+> plus corriger une fois téléchargé.
+
 ---
 
 # Seconde partie — l'application
@@ -514,19 +562,37 @@ PDF, vidéo, audio s'affichent sur une fiche mais ne se vendent pas séparément
 **Le volume est le seul choix qui compte** — la langue n'en est pas un lorsque la
 portée est `work`.
 
-### 8.4 — Une page HTML est relayée. Tout le reste est redirigé.
+### 8.4 — Ce qui porte des liens est relayé. Le poids est redirigé.
 
-Après vérification du droit : les pages HTML sont **servies par l'application**,
-qui va chercher les octets ; tout autre fichier reçoit une **redirection vers une
-adresse signée**, valable quelques minutes.
+Après vérification du droit, deux manières de livrer :
 
-> **Pourquoi** — rediriger une page HTML changerait la base d'adresse du
-> navigateur. Ses images, appelées en relatif, partiraient droit au stockage
-> objet, **hors de tout contrôle d'accès** — et échoueraient, faute d'être
-> signées. C'est le seul endroit de l'architecture qui casserait en silence.
+| | Ce que c'est | Comment |
+|---|---|---|
+| **relayé** | les pages, les feuilles de style, les scripts, les polices, les textes de narration — et les couvertures | l'application va chercher les octets et les rend sous sa propre adresse |
+| **redirigé** | les images des pages, les vidéos, l'audio, les PDF | une **redirection vers une adresse signée** du site de fichiers |
+
+L'adresse signée vaut quelques minutes — **quatre heures pour la vidéo et
+l'audio**, dont chaque plage revient avec la même adresse.
+
+> **Pourquoi** — un navigateur résout les liens relatifs d'une page, *et les
+> `url(…)` d'une feuille de style*, contre l'adresse où il les a finalement
+> reçues. Redirigé, un tel fichier enverrait ses images et ses polices droit au
+> site de fichiers, **hors de tout contrôle d'accès** — et elles échoueraient,
+> faute d'être signées. C'est l'endroit de l'architecture qui casserait en
+> silence. La première rédaction ne relayait que les pages : `bootstrap-icons.css`
+> aurait perdu ses icônes.
 >
-> **Figé par** — un test qui suit une page de chapitre offerte et vérifie que
-> chacune de ses images repasse par la porte unique.
+> Ce qu'une page lit par script (la narration), et les polices, demanderaient en
+> outre des en-têtes CORS au site de fichiers. Les couvertures, enfin, sont lues
+> par l'optimiseur d'images de Next, qui ne suit pas une redirection. Tout cela
+> pèse quelques mégaoctets ; les gigaoctets sont dans ce qui est redirigé.
+>
+> Une signature de cinq minutes couperait une vidéo mise en pause pendant six :
+> le lecteur redemande une plage à chaque avancée.
+>
+> **Figé par** — `tests/unit/porte-livraison.test.ts` : une page de chapitre
+> offerte, relayée, dont chaque image repasse par la porte unique ; une feuille
+> relayée dont la police reste sous la porte.
 
 ### 8.5 — Rien n'est chargé avant le clic
 
@@ -605,9 +671,13 @@ répond 200, et **un fichier réservé qui est réellement présent** répond 40
 
 ### 10.4 — Une recette ne s'indexe pas
 
-Tant que le site n'est pas ouvert : indexation fermée côté application, et en-tête
-d'exclusion côté frontal. **Les deux ensemble**, et vérifiés ensemble après toute
-modification.
+Tant que le site n'est pas ouvert : `robots.txt` ferme, et l'en-tête
+`X-Robots-Tag` exclut chaque réponse. **Les deux ensemble**, et vérifiés ensemble
+après toute modification. Une Web App n'a pas de frontal : les deux viennent de
+l'application, d'une seule variable, `INDEXATION`. **Absente, elle ferme.**
+
+Le site de fichiers, lui, ne s'indexe jamais : `porte.php` pose l'en-tête sur
+chacune de ses réponses.
 
 > **Pourquoi** — deux sites au contenu identique se feraient concurrence dans les
 > résultats de recherche. Un réglage se désactive par mégarde, un en-tête se perd
@@ -665,5 +735,7 @@ L'index connaît ces fichiers : il ne lui manque que d'en lire la première phra
 site archivé n'avait pas tranchées. À décider avec les pages.
 
 **Le miroir ouvert** sert encore les ouvrages entiers sans authentification. Plus
-aucun PDF n'y renvoie, mais tant qu'il est debout, le contrôle d'accès de ce site
-est contournable par une adresse devinée.
+aucun extrait n'y renvoie, mais tant qu'il est debout, le contrôle d'accès de ce
+site est contournable par une adresse devinée. **Il ne se ferme qu'après que les
+PDF complets ont été reliés** (règle 6.5) : leurs liens y mènent encore, et
+l'éteindre avant les casserait.
