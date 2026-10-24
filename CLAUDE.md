@@ -148,13 +148,38 @@ que porte la table des segments : `/es/catalogo`, `/en/read`.
 ## Le quai, tel qu'il est aujourd'hui
 
 Un seul ouvrage y est posé, `biology-2e` — cinq volumes, trois langues, environ
-dix gigaoctets. **Le nom du dossier d'un ouvrage EST son identifiant de
+neuf gigaoctets. Le quai vit dans `c:\OpenStax\Zakali_Edition\Livres`
+(`LIVRES_DIR`) ; le quai d'avant la livraison du 24 octobre 2026, avec ses MP3,
+est conservé dans `C:\OpenStax\Sauvegardes\`. **Le nom du dossier d'un ouvrage EST son identifiant de
 manifeste** : c'est ce qui permet au manifeste de ne porter aucun chemin.
 
-`outils/normaliser-quai.ts` a amené le quai d'atelier à cette forme. Il est **à
-usage unique et destiné à être supprimé** le jour où l'atelier dépose déjà en
-forme canonique. Rien du site ne l'importe ; le relancer sur un quai rangé ne
-fait rien et le dit.
+`outils/normaliser-quai.ts` amène une livraison d'atelier à cette forme. Prévu à
+usage unique, il sert **à chaque livraison** tant que l'atelier livre dans sa
+propre forme (PDF à plat, `html/`, `media/En`, `extraits/`) — celle du 24 octobre
+2026 y est passée. Il sera supprimé le jour où l'atelier dépose en forme
+canonique. Rien du site ne l'importe ; le relancer sur un quai rangé ne fait rien
+et le dit.
+
+### Après chaque livraison, dans cet ordre
+
+```
+npm run quai:normaliser -- biology-2e              # à blanc, puis --appliquer
+npm run extraits -- --domaine https://zakalipress.com --appliquer
+npm run index
+```
+
+Les **extraits PDF** livrés gardent les liens de l'atelier (un miroir appelé à
+disparaître, le disque de l'éditeur). `npm run extraits` en fabrique une copie
+reliée à la liseuse du site dans `derives/` — hors dépôt, hors quai — et **seule
+cette copie est servie** (règle 6.7). Un extrait non relié, ou relié avant sa
+livraison, sort de l'index. Le domaine gravé, `https://zakalipress.com`, a été
+choisi par l'éditeur : un lien gravé dans un PDF téléchargé ne se corrige plus.
+
+### Ce que le quai porte et qui n'est pas de lui
+
+Chaque `vol-N/<langue>/covers/Biology_vol1.png` est un **rapiéçage** : le HTML de
+l'atelier appelle ce nom dans les quinze volumes sans livrer l'image. Chacun
+porte la bonne couverture de son volume. Une livraison non corrigée l'effacera.
 
 ## État
 
@@ -170,9 +195,20 @@ en artefact versionné dans `donnees/index.json` par `npm run index`.
 > réel** — ces derniers s'ignorent d'eux-mêmes quand `LIVRES_DIR` n'est pas là,
 > pour qu'un poste neuf ne soit pas rouge par conception.
 
-Restent : le catalogue issu de l'index · le contenu éditorial · le stockage
-objet · la mise en ligne.
+**Phase 3 — le site public.** L'accueil (textes dans
+`src/contenu/editorial/accueil.json`, chiffres et ouvrages depuis l'index), le
+catalogue rangé par œuvre, la fiche d'un volume, la **liseuse**
+(`/fr/lire/<slug>?chapitre=N&figure=…`) qui montre le volume dans un cadre sous
+l'en-tête, la page d'un chapitre réservé, l'extrait PDF à télécharger. Les
+disciplines se déduisent de l'index (`src/contenu/disciplines.ts`).
 
-`src/contenu/disciplines.ts` est toujours la couture provisoire : l'index sait
-désormais les disciplines, mais les servir aux composants demande un chargement
-côté serveur, qui vient avec le catalogue.
+La **porte** `/contenu/<adresse>` (`src/porte/`) décide seule : offert servi,
+réservé en 403, hors index en 404. Elle lit aujourd'hui le **disque du poste**
+(`stockage-local.ts` : le quai, et `derives/`). **Sur un serveur sans ces
+fichiers, elle répond 503** — c'est le premier chantier de la mise en ligne.
+
+Deux défauts trouvés en route, et figés par des tests : `<link rel="next">`
+offrait le chapitre 2 de chaque édition (règle 4.3) ; aucune vidéo de figure ne
+se lisait, la page les cherchant sous son propre dossier (règle 4.7).
+
+Restent : le stockage objet et la mise en ligne · les comptes et l'achat.
