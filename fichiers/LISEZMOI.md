@@ -50,6 +50,28 @@ jamais dans le dépôt, ni dans une conversation :
 node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 ```
 
+## Verser les livres
+
+Depuis le poste, où vivent le quai et `derives/`, par SFTP :
+
+1. Dans hPanel, *Avancé → Accès SSH* : activer l'accès, et noter l'hôte, le
+   port (65002), l'utilisateur et le mot de passe.
+2. Les reporter dans le `.env` du poste (`VERSEMENT_*`, voir `.env.example`).
+   `VERSEMENT_DOSSIER` est le chemin absolu de `livres/`.
+3. Lancer :
+
+```
+npm run verser                   # à blanc : compare, et dit ce qui partirait
+npm run verser -- --appliquer    # envoie la part offerte
+```
+
+Seul ce que l'index connaît part, à son adresse d'index, et seulement ce qui a
+changé. Le réservé ne part qu'avec `--niveau reserve`, le jour où la vente
+existe (règle 10.2). Rien n'est jamais effacé là-bas.
+
+**Verser avant de pousser** : le site déployé signe ce que dit son index ; un
+fichier que l'index connaît et qui n'est pas encore versé répond 404.
+
 ## Changer de domaine
 
 `FICHIERS_URL` est lue à l'exécution et n'est gravée dans aucun fichier : le
