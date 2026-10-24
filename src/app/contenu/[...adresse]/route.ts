@@ -10,8 +10,11 @@
 import { indexDuSite } from '@/index/charge';
 import type { EntreeDIndex } from '@/index/index';
 import { cheminDeContenu } from '@/i18n/segments';
+import { nomDeTelechargement } from '@/porte/livraison';
 import { lectureDuChapitre, sortieVersLaLiseuse } from '@/porte/page-reservee';
 import { decider } from '@/porte/porte';
+import { stockageDuSite } from '@/porte/stockage';
+import { servirDepuisLeSiteDeFichiers } from '@/porte/stockage-distant';
 import { servirDepuisLeQuai } from '@/porte/stockage-local';
 
 /**
@@ -50,5 +53,14 @@ export async function GET(
     return Response.redirect(new URL(cheminDeContenu(decision.vers), requete.url), 308);
   }
   if (decision.statut === 403) return refuser(decision.entree);
-  return servirDepuisLeQuai(decision.entree, requete.headers.get('range'));
+
+  // Le droit est verifie : il ne reste qu'a livrer, depuis le quai du poste
+  // ou depuis le site de fichiers, selon la configuration.
+  const { entree } = decision;
+  const plage = requete.headers.get('range');
+  const nom = nomDeTelechargement(indexDuSite().index.fiches, entree.adresse);
+  const stockage = stockageDuSite();
+  return stockage.mode === 'distant'
+    ? servirDepuisLeSiteDeFichiers(stockage, entree, plage, nom)
+    : servirDepuisLeQuai(entree, plage, nom);
 }

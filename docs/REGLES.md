@@ -562,19 +562,37 @@ PDF, vidéo, audio s'affichent sur une fiche mais ne se vendent pas séparément
 **Le volume est le seul choix qui compte** — la langue n'en est pas un lorsque la
 portée est `work`.
 
-### 8.4 — Une page HTML est relayée. Tout le reste est redirigé.
+### 8.4 — Ce qui porte des liens est relayé. Le poids est redirigé.
 
-Après vérification du droit : les pages HTML sont **servies par l'application**,
-qui va chercher les octets ; tout autre fichier reçoit une **redirection vers une
-adresse signée**, valable quelques minutes.
+Après vérification du droit, deux manières de livrer :
 
-> **Pourquoi** — rediriger une page HTML changerait la base d'adresse du
-> navigateur. Ses images, appelées en relatif, partiraient droit au stockage
-> objet, **hors de tout contrôle d'accès** — et échoueraient, faute d'être
-> signées. C'est le seul endroit de l'architecture qui casserait en silence.
+| | Ce que c'est | Comment |
+|---|---|---|
+| **relayé** | les pages, les feuilles de style, les scripts, les polices, les textes de narration — et les couvertures | l'application va chercher les octets et les rend sous sa propre adresse |
+| **redirigé** | les images des pages, les vidéos, l'audio, les PDF | une **redirection vers une adresse signée** du site de fichiers |
+
+L'adresse signée vaut quelques minutes — **quatre heures pour la vidéo et
+l'audio**, dont chaque plage revient avec la même adresse.
+
+> **Pourquoi** — un navigateur résout les liens relatifs d'une page, *et les
+> `url(…)` d'une feuille de style*, contre l'adresse où il les a finalement
+> reçues. Redirigé, un tel fichier enverrait ses images et ses polices droit au
+> site de fichiers, **hors de tout contrôle d'accès** — et elles échoueraient,
+> faute d'être signées. C'est l'endroit de l'architecture qui casserait en
+> silence. La première rédaction ne relayait que les pages : `bootstrap-icons.css`
+> aurait perdu ses icônes.
 >
-> **Figé par** — un test qui suit une page de chapitre offerte et vérifie que
-> chacune de ses images repasse par la porte unique.
+> Ce qu'une page lit par script (la narration), et les polices, demanderaient en
+> outre des en-têtes CORS au site de fichiers. Les couvertures, enfin, sont lues
+> par l'optimiseur d'images de Next, qui ne suit pas une redirection. Tout cela
+> pèse quelques mégaoctets ; les gigaoctets sont dans ce qui est redirigé.
+>
+> Une signature de cinq minutes couperait une vidéo mise en pause pendant six :
+> le lecteur redemande une plage à chaque avancée.
+>
+> **Figé par** — `tests/unit/porte-livraison.test.ts` : une page de chapitre
+> offerte, relayée, dont chaque image repasse par la porte unique ; une feuille
+> relayée dont la police reste sous la porte.
 
 ### 8.5 — Rien n'est chargé avant le clic
 

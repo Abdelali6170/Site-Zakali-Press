@@ -3,13 +3,16 @@
  * Zakali Press — servir un fichier d'ouvrage depuis le quai du poste.
  *
  * ══════════════════════════════════════════════════════════════════════════
- *  STOCKAGE DE POSTE. LE STOCKAGE OBJET LE REMPLACERA A LA PUBLICATION.
+ *  STOCKAGE DE POSTE. EN LIGNE, C'EST LE SITE DE FICHIERS QUI SERT.
  * ══════════════════════════════════════════════════════════════════════════
  *
- * Le serveur de production n'a pas de quai : ses fichiers d'ouvrage viendront
- * d'un stockage objet, decision reportee au jour de la publication. Ce module
- * est ce qui permet, d'ici la, de voir le site complet sur le poste ou vit le
- * quai. Sans `LIVRES_DIR`, il repond 503 et le dit — jamais un 500 muet.
+ * Le serveur de production n'a pas de quai : ses fichiers d'ouvrage viennent
+ * du site de fichiers (`stockage-distant.ts`). Ce module est ce qui permet de
+ * voir le site complet sur le poste ou vit le quai. Sans `LIVRES_DIR`, il
+ * repond 503 et le dit — jamais un 500 muet.
+ *
+ * Il sert tout lui-meme, relaye comme redirige : sur le poste, la base
+ * d'adresse ne change pas, et la regle 8.4 n'a rien a proteger.
  *
  * Il ne recoit qu'une ENTREE D'INDEX, deja autorisee par la porte : le chemin
  * du fichier vient de l'index, jamais de la requete (regle 4.1).
@@ -23,30 +26,9 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 
 import type { EntreeDIndex } from '@/index/index';
+import { dispositionDeTelechargement } from '@/porte/livraison';
+import { typeDeContenu } from '@/porte/types-de-contenu';
 import { racineDesDerives, racineDuQuai } from '@/quai/chemins';
-
-const TYPES: Record<string, string> = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.txt': 'text/plain; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.gif': 'image/gif',
-  '.webp': 'image/webp',
-  '.ico': 'image/x-icon',
-  '.mp4': 'video/mp4',
-  '.webm': 'video/webm',
-  '.mp3': 'audio/mpeg',
-  '.pdf': 'application/pdf',
-  '.woff': 'font/woff',
-  '.woff2': 'font/woff2',
-  '.ttf': 'font/ttf',
-};
 
 /** `bytes=500-999` → `{ debut: 500, fin: 999 }`. Une plage illisible vaut fichier entier. */
 function lirePlage(entete: string | null, taille: number): { debut: number; fin: number } | null {
@@ -63,7 +45,11 @@ function lirePlage(entete: string | null, taille: number): { debut: number; fin:
   return { debut, fin };
 }
 
-export function servirDepuisLeQuai(entree: EntreeDIndex, entetePlage: string | null): Response {
+export function servirDepuisLeQuai(
+  entree: EntreeDIndex,
+  entetePlage: string | null,
+  nom?: string,
+): Response {
   let racine: string;
   try {
     // Un derive (regle 6.7) vit hors du quai, sous la racine des derives.
@@ -82,12 +68,13 @@ export function servirDepuisLeQuai(entree: EntreeDIndex, entetePlage: string | n
   }
 
   const entetes = new Headers({
-    'Content-Type': TYPES[path.extname(fichier).toLowerCase()] ?? 'application/octet-stream',
+    'Content-Type': typeDeContenu(fichier),
     'Accept-Ranges': 'bytes',
     // Seul l'offert passe la porte aujourd'hui : il peut etre mis en cache.
     // Le jour ou le reserve passera, ses reponses devront etre `private`.
     'Cache-Control': 'public, max-age=3600',
   });
+  if (nom) entetes.set('Content-Disposition', dispositionDeTelechargement(nom));
 
   const plage = lirePlage(entetePlage, taille);
   if (plage && (plage.debut > plage.fin || plage.debut >= taille)) {

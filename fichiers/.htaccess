@@ -1,0 +1,11 @@
+# Zakali Press — site de fichiers.
+#
+# Toute requete va a porte.php, qui ne sert que ce que le site a signe.
+# Rien d'autre n'est servi d'ici : les livres vivent HORS de public_html.
+
+Options -Indexes
+
+RewriteEngine On
+# Une fois reecrite, la requete vise porte.php : on ne la reecrit pas deux fois.
+RewriteCond %{REQUEST_URI} !^/porte\.php$
+RewriteRule ^ porte.php [L,QSA]
