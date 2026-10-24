@@ -34,6 +34,8 @@ import {
   dossierEdition,
   dossierPdf,
   fichierCouverture,
+  fichierExtrait,
+  fichierExtraitRelie,
   nomDeChapitreMedia,
 } from '@/quai/chemins';
 import { figuresDeChapitre, fichiersDeMedia } from '@/quai/figures';
@@ -73,7 +75,14 @@ class Chantier {
    */
   private readonly remarques = new Map<string, number>();
 
-  constructor(readonly racine: string) {}
+  /**
+   * `derives` : la racine des fichiers que le site fabrique (regle 6.7), ou
+   * `null` si cette fabrication n'en lit aucun.
+   */
+  constructor(
+    readonly racine: string,
+    readonly derives: string | null,
+  ) {}
 
   signaler(texte: string): void {
     this.remarques.set(texte, (this.remarques.get(texte) ?? 0) + 1);
@@ -89,6 +98,10 @@ class Chantier {
    * Un fichier deja inscrit ne se dedouble pas ; s'il revient avec un acces
    * plus large, il l'obtient. Deux chapitres partagent un dossier de medias
    * (regle 2.3) : si l'un est offert, ses figures le sont.
+   *
+   * De meme, un fichier rencontre d'abord comme ressource puis comme page
+   * DEVIENT une page : la sorte decide s'il est relaye ou redirige (regle
+   * 8.4), et elle ne doit pas dependre de l'ordre de la lecture.
    */
   inscrire(
     adresse: string,
@@ -107,6 +120,7 @@ class Chantier {
         );
       }
       if (acces === 'offert') deja.acces = 'offert';
+      if (sorte === 'page') deja.sorte = 'page';
       return true;
     }
     this.entrees.set(adresse, {
@@ -117,6 +131,23 @@ class Chantier {
       acces,
     });
     return true;
+  }
+
+  /** Inscrit un fichier fabrique par le site, relatif a la racine des derives. */
+  inscrireUnDerive(
+    adresse: string,
+    fichierAbsolu: string,
+    sorte: SorteDEntree,
+    acces: NiveauDAcces,
+  ): void {
+    this.entrees.set(adresse, {
+      adresse,
+      fichier: path.relative(this.derives!, fichierAbsolu).split(path.sep).join('/'),
+      origine: 'derive',
+      octets: fs.statSync(fichierAbsolu).size,
+      sorte,
+      acces,
+    });
   }
 }
 
@@ -280,6 +311,9 @@ function fabriquerEdition(
   if (!aUneCouverture) chantier.signaler(`${nom} : la couverture manque.`);
 
   const textes = volume.textes[langue];
+  const extrait = manifeste.reglages.extraitPdf
+    ? inscrireLExtrait(chantier, manifeste.id, numeroDeVolume, langue, `${prefixe}/extrait.pdf`, nom, textes.slug)
+    : null;
   return {
     clefDOeuvre: clef,
     ouvrage: manifeste.id,
@@ -311,7 +345,44 @@ function fabriquerEdition(
       audio: manifeste.reglages.audioDeFigure && totalDeFigures > 0,
     },
     pdfs,
+    extrait,
   };
+}
+
+/**
+ * L'extrait gratuit, quand l'ouvrage en offre un (reglage `extractPdf`).
+ *
+ * Regle 6.7 — l'extrait LIVRE garde les liens de l'atelier et n'est jamais
+ * servi. Seule sa copie RELIEE, fabriquee par `npm run extraits`, entre dans
+ * l'index. Chaque etape manquante se nomme dans le rapport, et l'extrait reste
+ * alors hors de l'index : mieux vaut pas d'extrait qu'un extrait aux liens
+ * morts.
+ */
+function inscrireLExtrait(
+  chantier: Chantier,
+  ouvrage: string,
+  numeroDeVolume: number,
+  langue: Langue,
+  adresse: string,
+  nom: string,
+  slug: string,
+): FichierDeFiche | null {
+  const livre = fichierExtrait(chantier.racine, ouvrage, numeroDeVolume, langue);
+  if (!fs.existsSync(livre)) {
+    chantier.signaler(`${nom} : l’ouvrage offre un extrait PDF, mais il n’est pas livre.`);
+    return null;
+  }
+  const relie = chantier.derives && fichierExtraitRelie(chantier.derives, ouvrage, numeroDeVolume, langue);
+  if (!relie || !fs.existsSync(relie)) {
+    chantier.signaler(`${nom} : l’extrait est livre mais pas relie — lancer npm run extraits.`);
+    return null;
+  }
+  if (fs.statSync(relie).mtimeMs < fs.statSync(livre).mtimeMs) {
+    chantier.signaler(`${nom} : l’extrait relie est plus ancien que sa livraison — relancer npm run extraits.`);
+    return null;
+  }
+  chantier.inscrireUnDerive(adresse, relie, 'extrait', 'offert');
+  return { adresse, nom: `${slug}-extrait.pdf`, octets: fs.statSync(relie).size };
 }
 
 /**
@@ -439,13 +510,17 @@ function comparerLesCouvertures(chantier: Chantier, manifeste: Manifeste): void 
  *
  * `maintenant` est passe de l'exterieur : un artefact versionne ne doit pas
  * changer parce qu'on le refabrique deux fois de suite dans un test.
+ *
+ * `derives` est la racine des fichiers fabriques par le site (regle 6.7). Sans
+ * elle, aucun extrait n'est indexe — et le rapport le dit.
  */
 export function fabriquerIndex(
   racine: string,
   manifestes: Manifeste[],
   maintenant: string,
+  derives: string | null = null,
 ): Fabrication {
-  const chantier = new Chantier(racine);
+  const chantier = new Chantier(racine, derives);
   const fiches: Fiche[] = [];
 
   for (const manifeste of manifestes) {

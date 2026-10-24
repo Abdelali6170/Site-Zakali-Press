@@ -29,6 +29,7 @@
  *   html/<nom>-Volume-<ROMAIN>-ES/    le meme, en espagnol
  *   media/{En,Fr,Es}/<sorte>/chNN/    langue capitalisee
  *   <nom>-Volume-<ROMAIN>[-FR|-ES][-suffixe].pdf   a la racine
+ *   extraits/<nom>-Volume-<ROMAIN>[-FR|-ES]-Extrait.pdf   les extraits gratuits
  *
  * L'absence de suffixe de langue vaut anglais : c'est la langue d'origine de
  * la chaine de production, les traductions seules etant marquees.
@@ -133,6 +134,18 @@ function lirePdf(nom: string): { volume: number; langue: Langue } | null {
   return CODES.includes(langue) ? { volume, langue } : null;
 }
 
+/** `…-Volume-I-FR-Extrait.pdf` : le suffixe est le meme dans toutes les langues. */
+const EXTRAIT = /-Extrait\.pdf$/i;
+
+function gesteDExtrait(base: string, de: string, lu: { volume: number; langue: Langue }): Geste {
+  return {
+    sorte: 'deplacer',
+    de,
+    vers: path.join(base, nomDeVolume(lu.volume), 'extrait', `${lu.langue}.pdf`),
+    pourquoi: `extrait du volume ${lu.volume}, ${lu.langue}`,
+  };
+}
+
 function estDossier(chemin: string): boolean {
   return fs.existsSync(chemin) && fs.statSync(chemin).isDirectory();
 }
@@ -217,6 +230,26 @@ function planifier(racine: string, ouvrage: string): Plan {
     }
   }
 
+  // ── Les extraits : extraits/<nom>-Volume-<ROMAIN>[-XX]-Extrait.pdf ────────
+  //                  → vol-<n>/extrait/<langue>.pdf
+  const extraits = path.join(base, 'extraits');
+  if (estDossier(extraits)) {
+    for (const entree of fs.readdirSync(extraits, { withFileTypes: true })) {
+      const de = path.join(extraits, entree.name);
+      const lu = entree.isFile() && EXTRAIT.test(entree.name) ? lirePdf(entree.name) : null;
+      if (!lu) {
+        laisses.push(`${path.relative(racine, de)} — n’est pas un extrait reconnu`);
+        continue;
+      }
+      gestes.push(gesteDExtrait(base, de, lu));
+    }
+    gestes.push({
+      sorte: 'supprimer-dossier-vide',
+      de: extraits,
+      pourquoi: 'la forme canonique range l’extrait dans son volume',
+    });
+  }
+
   // ── Les PDF : <nom>-Volume-<ROMAIN>[-XX]*.pdf → vol-<n>/pdf/<langue>/ ─────
   for (const entree of fs.readdirSync(base, { withFileTypes: true })) {
     if (!entree.isFile()) continue;
@@ -228,6 +261,12 @@ function planifier(racine: string, ouvrage: string): Plan {
     const lu = lirePdf(entree.name);
     if (!lu) {
       laisses.push(`${path.relative(racine, de)} — aucun volume lisible dans le nom`);
+      continue;
+    }
+    // Un extrait pose parmi les PDF complets serait vendu avec eux : il a sa
+    // place a lui, ou qu'il ait ete livre.
+    if (EXTRAIT.test(entree.name)) {
+      gestes.push(gesteDExtrait(base, de, lu));
       continue;
     }
     gestes.push({

@@ -91,6 +91,38 @@ export function fichierCouverture(
 }
 
 /**
+ * `<quai>/<ouvrage>/<volume>/extrait/<langue>.pdf` — l'extrait tel que l'atelier
+ * le livre, avec ses liens d'origine. Il n'est jamais servi (regle 6.7).
+ */
+export function fichierExtrait(
+  racine: string,
+  ouvrage: string,
+  volume: number,
+  langue: Langue,
+): string {
+  return path.join(racine, ouvrage, nomDeVolume(volume), 'extrait', `${langue}.pdf`);
+}
+
+/**
+ * La racine des DERIVES : ce que le site fabrique a partir du quai, sur le
+ * poste. `derives/` a la racine du depot, ignore par Git. Ce n'est pas le
+ * quai : le site n'ecrit jamais sur le quai (regle 6.7).
+ */
+export function racineDesDerives(): string {
+  return path.join(process.cwd(), 'derives');
+}
+
+/** `<derives>/extraits/<ouvrage>/<volume>/<langue>.pdf` — l'extrait relie, seul servi. */
+export function fichierExtraitRelie(
+  derives: string,
+  ouvrage: string,
+  volume: number,
+  langue: Langue,
+): string {
+  return path.join(derives, 'extraits', ouvrage, nomDeVolume(volume), `${langue}.pdf`);
+}
+
+/**
  * `<quai>/<ouvrage>/media/<langue>/<sorte>/chNN/`
  *
  * Les medias sont ranges au niveau de l'OUVRAGE, pas du volume : les chapitres

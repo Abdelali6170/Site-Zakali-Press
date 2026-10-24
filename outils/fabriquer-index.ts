@@ -18,7 +18,7 @@ import path from 'node:path';
 
 import { fabriquerIndex } from '@/index/fabriquer';
 import { lireManifestes } from '@/ouvrages/catalogue';
-import { racineDuQuai } from '@/quai/chemins';
+import { racineDesDerives, racineDuQuai } from '@/quai/chemins';
 
 const DESTINATION = path.join(process.cwd(), 'donnees', 'index.json');
 
@@ -30,7 +30,12 @@ function principal(): void {
   console.log(`Quai      : ${racine}`);
   console.log(`Ouvrages  : ${manifestes.map((m) => m.id).join(', ') || 'aucun'}\n`);
 
-  const { index, rapport } = fabriquerIndex(racine, manifestes, new Date().toISOString());
+  const { index, rapport } = fabriquerIndex(
+    racine,
+    manifestes,
+    new Date().toISOString(),
+    racineDesDerives(),
+  );
 
   if (rapport.length === 0) {
     console.log('Le quai n’appelle aucune remarque.\n');

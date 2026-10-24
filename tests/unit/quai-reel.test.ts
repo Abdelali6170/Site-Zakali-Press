@@ -135,9 +135,10 @@ describe.skipIf(RACINE === null)('le quai reel — biology-2e', () => {
     expect(adresses().filter((a) => a.endsWith('search.json'))).toEqual([]);
   });
 
-  it('regle 1.8 — l’audio est pose sur le quai et l’index l’ignore', () => {
-    // `figureAudio: false` dans le manifeste. Les fichiers sont bien la.
-    expect(fs.existsSync(path.join(RACINE!, 'biology-2e', 'media', 'fr', 'audio', 'ch01'))).toBe(true);
+  it('regle 1.8 — aucun audio n’est indexe', () => {
+    // `figureAudio: false` dans le manifeste. Depuis la livraison du 24 octobre
+    // 2026, le quai reel ne porte plus d'audio du tout ; le cas « pose mais
+    // ignore » est fige sur le quai d'essai (index-fabrication.test.ts).
     expect(adresses().filter((a) => a.includes('/media/audio/'))).toEqual([]);
   });
 
@@ -147,11 +148,11 @@ describe.skipIf(RACINE === null)('le quai reel — biology-2e', () => {
   });
 
   it('regle 4.6 — le rapport nomme ce qui cloche, sans faire tomber le reste', () => {
-    // Le quai a de vrais defauts : un lien vers un PDF qui n'y est pas, une
-    // image manquante au chapitre 31b, et une seule image pour les quinze
-    // couvertures. Aucun n'empeche l'index d'exister.
+    // Le quai a de vrais defauts : des liens vers des PDF qui n'y sont pas, et
+    // une image de couverture que chaque page d'accueil appelle sans qu'elle
+    // soit livree. Aucun n'empeche l'index d'exister.
     expect(fabrication.rapport.length).toBeGreaterThan(0);
     expect(fiches()).toHaveLength(15);
-    expect(fabrication.rapport.some((l) => l.includes('couverture'))).toBe(true);
+    expect(fabrication.rapport.some((l) => l.includes('lien mort'))).toBe(true);
   });
 });

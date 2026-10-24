@@ -27,7 +27,7 @@ import type { Portee } from '@/ouvrages/manifeste';
  * travers : un artefact versionne survit aux branches, et une forme changee en
  * silence donnerait un catalogue muet sans message.
  */
-export const VERSION_DE_L_INDEX = 1;
+export const VERSION_DE_L_INDEX = 2;
 
 export type NiveauDAcces = 'offert' | 'reserve';
 
@@ -38,18 +38,22 @@ export type SorteDEntree =
   | 'video'
   | 'audio'
   | 'pdf'
-  | 'couverture';
+  | 'couverture'
+  | 'extrait';
 
 export type EntreeDIndex = {
   /** `<clef d'oeuvre>/<langue>/<chemin>` — c'est aussi la clef de stockage (regle 4.2). */
   adresse: string;
   /**
-   * Le chemin du fichier, relatif a la racine du quai, en separateurs POSIX.
+   * Le chemin du fichier, en separateurs POSIX, relatif a la racine du quai —
+   * ou a celle des derives quand `origine` le dit.
    *
    * Il ne sort jamais de l'index : c'est le seul endroit ou une adresse
    * publique rejoint un fichier reel.
    */
   fichier: string;
+  /** Absent : le fichier vient du quai. `derive` : le site l'a fabrique (regle 6.7). */
+  origine?: 'derive';
   octets: number;
   sorte: SorteDEntree;
   acces: NiveauDAcces;
@@ -96,6 +100,8 @@ export type Fiche = {
   /** Des badges, pas des articles : rien de tout cela ne se vend a part (regle 8.3). */
   formats: { pdf: boolean; video: boolean; audio: boolean };
   pdfs: FichierDeFiche[];
+  /** L'extrait gratuit, relie et offert — ou `null` (regles 1.7 et 6.7). */
+  extrait: FichierDeFiche | null;
 };
 
 export type Index = {

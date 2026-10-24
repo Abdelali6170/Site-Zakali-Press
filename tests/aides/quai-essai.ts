@@ -74,11 +74,19 @@ ${liens
 </body></html>`;
 }
 
-/** Une page de chapitre, avec ses images appelees en relatif. */
-function pageDeChapitre(titre: string, dossier: string, images: string[]): string {
+/**
+ * Une page de chapitre, avec ses images appelees en relatif.
+ *
+ * `suivant` reproduit ce que Quarto ecrit dans l'en-tete de chaque chapitre :
+ * `<link rel="next">` vers le chapitre d'apres. C'est un `<link href>` qui
+ * n'est PAS de l'affichage — il a offert le chapitre 2 des quinze editions
+ * reelles jusqu'au 24 octobre 2026 (regle 4.3).
+ */
+function pageDeChapitre(titre: string, dossier: string, images: string[], suivant?: string): string {
   const remonte = '../'.repeat(dossier ? dossier.split('/').length : 0);
   return `<!DOCTYPE html><html><head><title>${titre}</title>
 <link href="${remonte}style/base.css" rel="stylesheet">
+${suivant ? `<link href="./${suivant}" rel="next">` : ''}
 </head><body>
 <nav class="quarto-page-breadcrumbs"><a href="${remonte}index.html" class="chapter-title">${titre}</a></nav>
 <h1>${titre}</h1>
@@ -142,7 +150,7 @@ export function monterLeQuaiDEssai(): QuaiDEssai {
   );
   ecrire(
     path.join(double, 'vol-1', 'fr', 'pages', 'chapitre_01.html'),
-    pageDeChapitre('Chapitre 1', 'pages', ['fleur.png', 'absente.png']),
+    pageDeChapitre('Chapitre 1', 'pages', ['fleur.png', 'absente.png'], 'chapitre_02.html'),
   );
   ecrire(
     path.join(double, 'vol-1', 'fr', 'pages', 'chapitre_02.html'),

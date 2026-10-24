@@ -28,8 +28,8 @@ import { attributs } from '@/quai/html';
  * lettres — « une page de chapitre non offerte reste reservee meme si une page
  * offerte y renvoie ».
  *
- * `href` reste lu sur `<link>`, ou il designe une feuille de style ou une
- * icone : la, c'est bien de l'affichage.
+ * `href` reste lu sur `<link>`, mais SEULEMENT pour les relations
+ * d'affichage — voir `RELATIONS_D_AFFICHAGE`.
  */
 const APPELS_D_AFFICHAGE: Record<string, readonly string[]> = {
   img: ['src'],
@@ -42,6 +42,33 @@ const APPELS_D_AFFICHAGE: Record<string, readonly string[]> = {
   embed: ['src'],
   object: ['data'],
 };
+
+/**
+ * Les `rel` d'un `<link>` qui servent l'affichage.
+ *
+ * `<link>` n'est pas que de l'affichage : Quarto ecrit `<link rel="next">` et
+ * `<link rel="prev">` vers les chapitres voisins. Les compter offrait le
+ * chapitre 2 de chaque edition reelle avec le chapitre 1 — exactement la
+ * fuite que la regle 4.3 interdit. Une LISTE DE CE QUI EST ADMIS, et non de ce
+ * qui est exclu : un `rel` inconnu demain n'offrira rien par megarde.
+ */
+const RELATIONS_D_AFFICHAGE = new Set([
+  'stylesheet',
+  'icon',
+  'apple-touch-icon',
+  'mask-icon',
+  'manifest',
+  'preload',
+  'modulepreload',
+]);
+
+function estDeLAffichage(balise: string, attribut: Record<string, string>): boolean {
+  if (balise !== 'link') return true;
+  return (attribut.rel ?? '')
+    .toLowerCase()
+    .split(/\s+/)
+    .some((relation) => RELATIONS_D_AFFICHAGE.has(relation));
+}
 
 /**
  * Resout une adresse relative depuis le dossier d'une page, en restant DANS
@@ -78,9 +105,11 @@ export function resoudreDansLeVolume(pageDuVolume: string, appel: string): strin
 export function fichiersAppelesParUnePage(pageDuVolume: string, html: string): string[] {
   const trouves = new Set<string>();
   for (const balise of html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)>/gi)) {
-    const appels = APPELS_D_AFFICHAGE[balise[1].toLowerCase()];
+    const nomDeBalise = balise[1].toLowerCase();
+    const appels = APPELS_D_AFFICHAGE[nomDeBalise];
     if (!appels) continue;
     const attribut = attributs(balise[2]);
+    if (!estDeLAffichage(nomDeBalise, attribut)) continue;
     for (const nom of appels) {
       const appel = attribut[nom];
       if (!appel) continue;

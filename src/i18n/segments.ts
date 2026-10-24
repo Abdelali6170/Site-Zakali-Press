@@ -85,6 +85,32 @@ export function chemin(
 }
 
 /**
+ * Adresse de la liseuse : le sommaire du volume, ou l'un de ses chapitres.
+ *
+ * `rang` est la place du chapitre dans le sommaire, a partir de 1 — et non son
+ * numero : `chapter_31a` et `chapter_31b` portent le meme numero (regle 2.3).
+ *
+ * `figure` est le nom de base d'une figure de ce chapitre : la liseuse s'y
+ * rend et ouvre sa video. C'est la cible des liens des extraits (regle 6.5).
+ */
+export function cheminDeLecture(langue: Langue, slug: string, rang?: number, figure?: string): string {
+  return chemin(langue, 'lire', {
+    slug,
+    requete: rang ? { chapitre: rang, figure } : undefined,
+  });
+}
+
+/**
+ * Adresse publique d'un fichier d'ouvrage, depuis son adresse d'index.
+ *
+ * Regle 7.2 — pas de prefixe de langue : l'adresse porte deja la sienne, a
+ * l'interieur, et une page de chapitre appelle ses images en relatif.
+ */
+export function cheminDeContenu(adresse: string): string {
+  return `/contenu/${adresse.split('/').map(encodeURIComponent).join('/')}`;
+}
+
+/**
  * Reconnait la page visee par un chemin, quelle que soit la langue.
  * Sert au selecteur de langue : rester sur la meme page en changeant de langue.
  */

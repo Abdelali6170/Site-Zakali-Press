@@ -15,6 +15,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "index": "tsx outils/fabriquer-index.ts",
+    "extraits": "tsx outils/relier-extraits.ts",
     "quai:normaliser": "tsx outils/normaliser-quai.ts"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.3.3",
+    "pdf-lib": "^1.17.1",
     "tsx": "^4.23.12",
     "typescript": "^5.9.0",
     "vitest": "^4.1.11"

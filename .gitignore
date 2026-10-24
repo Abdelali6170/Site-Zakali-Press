@@ -21,6 +21,11 @@ next-env.d.ts
 # versionnes. Leur emplacement se declare par LIVRES_DIR dans le .env.
 /Livres/
 
+# ── Les derives du site ─────────────────────────────────────────────────────
+# Ce que le site fabrique a partir du quai, sur le poste : les extraits PDF aux
+# liens reecrits (regle 6.7). Refabricables a tout moment.
+/derives/
+
 # ── Sorties de tests ─────────────────────────────────────────────────────────
 # Les tests EUX-MEMES sont versionnes ; seules leurs sorties sont ignorees.
 /coverage

@@ -93,6 +93,21 @@ describe('regle 4.3 — ce qui est offert l’est par deduction, pas par liste',
     expect(offert('essai-double-vol-1/fr/pages/images/arbre.png')).toBe('reserve');
   });
 
+  it('`<link rel="next">` est une navigation : il n’offre pas le chapitre suivant', () => {
+    // Le chapitre 1, offert, porte dans son en-tete le `<link rel="next">` que
+    // Quarto ecrit vers le chapitre 2. Lu comme une feuille de style, il a
+    // offert le chapitre 2 des quinze editions reelles.
+    expect(offert('essai-double-vol-1/fr/pages/chapitre_02.html')).toBe('reserve');
+  });
+
+  it('un chapitre est une PAGE, quel que soit l’ordre ou il a ete rencontre', () => {
+    // Regle 8.4 : une page est relayee, le reste redirige. Un chapitre classe
+    // « ressource » serait redirige, et ses images partiraient hors controle.
+    const sorte = (adresse: string) => entreeDe(chargerIndex(index), adresse)?.sorte;
+    expect(sorte('essai-double-vol-1/fr/pages/chapitre_01.html')).toBe('page');
+    expect(sorte('essai-double-vol-1/fr/pages/chapitre_02.html')).toBe('page');
+  });
+
   it('le texte integral du volume n’entre jamais dans l’index', () => {
     // `search.json` porte le texte des chapitres RESERVES. L'offrir avec le
     // sommaire donnerait le volume entier a qui sait le demander.

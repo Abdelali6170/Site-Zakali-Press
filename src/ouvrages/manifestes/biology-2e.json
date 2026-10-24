@@ -32,7 +32,7 @@
   "settings": {
     "freeChapters": 1,
     "purchaseScope": "work",
-    "extractPdf": false,
+    "extractPdf": true,
     "figureVideo": true,
     "figureAudio": false
   },

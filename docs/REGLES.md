@@ -40,6 +40,7 @@ l'atelier — **ne regarde pas le site**.
   <volume>/<langue>/            le site HTML du volume
   <volume>/pdf/<langue>/        les PDF de ce volume
   <volume>/couverture/<langue>.png
+  <volume>/extrait/<langue>.pdf    l'extrait gratuit, quand l'ouvrage en offre un
   media/<langue>/narration/chNN/
   media/<langue>/video/chNN/
   media/<langue>/audio/chNN/
@@ -324,6 +325,19 @@ ouvrages.**
 > en trois exemplaires, et deux scripts servaient à les tenir d'accord. Une seule
 > vérité, une seule dérivation.
 
+### 4.7 — Un média appelé depuis le dossier d'une page renvoie à son adresse canonique
+
+Une page de chapitre calcule l'adresse de ses vidéos en relatif, depuis son
+dossier : `chapitres_fr/media/video/ch01/…`. Les médias vivent à l'ouvrage, et
+l'index les connaît à `media/video/ch01/…` de l'édition. La porte renvoie de l'une
+à l'autre — si l'adresse canonique est indexée, dans la même édition — et le droit
+s'y vérifie comme pour tout fichier.
+
+> **Pourquoi** — sans ce renvoi, aucune vidéo de figure ne se lisait : la page
+> recevait un 404 et se rabattait en silence sur l'image agrandie. L'adresse
+> calculée vit dans le script de la page, pas dans son balisage : la lecture de la
+> page (règle 4.3) ne pouvait pas la relever.
+
 ### 4.6 — La fabrication inspecte le quai et dit ce qui cloche
 
 Elle ne va rien chercher : elle regarde ce qui est posé et le nomme.
@@ -470,6 +484,18 @@ geste de l'éditeur.
 
 > **Pourquoi** — ce sont les fichiers de production de la maison. Et un master
 > remis à un acheteur ne doit pas désigner un hôte de recette.
+
+### 6.7 — L'extrait servi est un dérivé du site, jamais le fichier livré
+
+L'extrait posé sur le quai garde les liens de l'atelier. Le site en fabrique une
+copie aux liens réécrits (`npm run extraits`) dans `derives/`, hors dépôt et hors
+quai — le quai reste en lecture seule. **Seule cette copie entre dans l'index** ;
+un extrait livré mais pas encore relié n'est servi à personne, et le rapport le
+dit. Un extrait relié plus ancien que sa livraison est signalé, et n'est plus servi.
+
+> **Pourquoi** — l'extrait livré désigne le miroir de l'atelier, qui disparaîtra.
+> Le servir tel quel distribuerait des liens morts dans un fichier qu'on ne peut
+> plus corriger une fois téléchargé.
 
 ---
 
