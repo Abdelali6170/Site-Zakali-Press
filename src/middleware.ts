@@ -28,6 +28,16 @@ import { pageDepuisSegment } from '@/i18n/segments';
 
 const COOKIE_LANGUE = 'zk.langue';
 
+/** Le segment survit aux deux decodages que Next lui fera subir. */
+function seDecodeProprement(segment: string): boolean {
+  try {
+    decodeURIComponent(decodeURIComponent(segment));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function middleware(requete: NextRequest) {
   const { pathname, search } = requete.nextUrl;
   const morceaux = pathname.split('/').filter(Boolean);
@@ -55,7 +65,11 @@ export function middleware(requete: NextRequest) {
 
   // ── 3. Le segment appartient-il a CETTE langue ? ──────────────────────────
   const page = pageDepuisSegment(langue, deuxieme);
-  if (!page) {
+  // Un identifiant qui ne se decode pas proprement ne designe rien non plus.
+  // Next decode les parametres de route une seconde fois, et `100%25` ou
+  // `%E9t%E9` le font echouer en 500 (« failed to decode param ») avant que la
+  // page ait pu repondre 404.
+  if (!page || !reste.every(seDecodeProprement)) {
     // Aucune page ne porte ce mot dans cette langue. On reecrit vers une
     // adresse sans route : Next rend alors sa page « introuvable ».
     return NextResponse.rewrite(new URL(`/${langue}/_introuvable`, requete.url));

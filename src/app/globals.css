@@ -39,7 +39,12 @@
   box-sizing: border-box;
 }
 
+/* Le corps prend toute la hauteur : sur une page courte, le pied de page reste
+   en bas au lieu de laisser une bande claire sous lui. */
 body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   background: var(--fond);
   color: var(--encre);
@@ -111,20 +116,17 @@ audio {
 }
 
 .marque {
+  display: flex;
+  align-items: center;
   text-decoration: none;
   flex-shrink: 0;
 }
 
-.signature {
-  font-family: var(--titre);
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--encre);
-}
-
-.signature-inverse {
-  color: var(--fond);
+/* Le logo est un PNG transparent : il se pose sur n'importe quel fond clair. */
+.logo {
+  display: block;
+  height: 50px;
+  width: auto;
 }
 
 .liens {
@@ -402,8 +404,20 @@ audio {
   margin: 0 auto;
   padding: 3rem var(--marge) 2rem;
   display: grid;
-  grid-template-columns: 2fr repeat(auto-fit, minmax(160px, 1fr));
+  /* La marque, puis une colonne par liste, cote a cote. Ecrit d'abord
+     `2fr repeat(auto-fit, …)` : une repetition automatique n'admet pas de
+     piste en `fr` a cote d'elle, la declaration entiere etait ignoree et les
+     colonnes s'empilaient. Les colonnes implicites suivent le nombre de listes. */
+  grid-template-columns: minmax(0, 2fr);
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
   gap: 2.5rem;
+}
+
+.pied-logo {
+  display: block;
+  height: 56px;
+  width: auto;
 }
 
 .pied-accroche {
@@ -456,6 +470,7 @@ audio {
 @media (max-width: 700px) {
   .pied-corps {
     grid-template-columns: 1fr;
+    grid-auto-flow: row;
     gap: 1.75rem;
   }
 }
@@ -465,13 +480,978 @@ audio {
    ══════════════════════════════════════════════════════════════════════════ */
 
 .contenu {
-  min-height: 50vh;
+  flex: 1;
 }
 
 .enveloppe {
   max-width: var(--largeur);
   margin: 0 auto;
   padding: 3rem var(--marge);
+}
+
+.bouton-discret {
+  border-color: var(--principale);
+  color: var(--principale);
+}
+
+.bouton-discret:hover {
+  background: var(--principale);
+  color: var(--fond);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LE CATALOGUE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.catalogue-tete {
+  margin-bottom: 3rem;
+}
+
+.catalogue-tete h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.catalogue-intro {
+  color: var(--attenue);
+  max-width: 60ch;
+  margin: 0.75rem 0 0;
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+}
+
+.filtre {
+  padding: 0.35rem 0.95rem;
+  border: 1px solid var(--sable-profond);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  color: var(--encre);
+  text-decoration: none;
+}
+
+.filtre:hover {
+  background: var(--sable);
+}
+
+.filtre[aria-current='page'] {
+  background: var(--principale);
+  border-color: var(--principale);
+  color: var(--fond);
+}
+
+.catalogue-vide {
+  color: var(--attenue);
+}
+
+/* ── L'oeuvre, un niveau au-dessus de l'edition ─────────────────────────── */
+
+.oeuvre + .oeuvre {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--sable-profond);
+}
+
+.oeuvre-tete {
+  margin-bottom: 1.75rem;
+}
+
+.oeuvre-discipline {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.oeuvre-tete h2 {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--principale);
+}
+
+.oeuvre-mentions,
+.oeuvre-langues {
+  margin: 0.4rem 0 0;
+  color: var(--attenue);
+  font-size: 0.925rem;
+}
+
+/* ── Les volumes ────────────────────────────────────────────────────────── */
+
+.volumes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* 190 px : les cinq volumes d'une serie tiennent sur une ligne a pleine
+     largeur, au lieu de laisser le dernier seul en dessous. */
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 2rem 1.25rem;
+}
+
+.carte {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.carte-couverture {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 4px;
+  /* L'aplat qui tient la place quand la couverture manque (regle 8.6). */
+  background: var(--sable);
+  box-shadow: 0 10px 24px -14px rgb(74 4 4 / 45%);
+}
+
+a.carte-couverture {
+  display: block;
+}
+
+.carte-couverture img {
+  object-fit: cover;
+}
+
+.carte-titre a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.carte-titre a:hover {
+  color: var(--principale);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.carte-corps {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.carte-titre {
+  font-size: 1.1rem;
+}
+
+.carte-accroche {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--attenue);
+}
+
+.carte-mesures {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+.badges {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  background: var(--sable);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--principale);
+}
+
+.carte-pied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
+}
+
+.prix {
+  font-family: var(--titre);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Un ouvrage a volume unique ne s'affiche pas comme une serie : une carte
+   large, couverture a gauche. */
+.volumes-unique {
+  grid-template-columns: 1fr;
+}
+
+.volumes-unique .carte {
+  display: grid;
+  grid-template-columns: minmax(160px, 260px) 1fr;
+  gap: 2rem;
+  max-width: 820px;
+}
+
+.volumes-unique .carte-corps {
+  padding-top: 0;
+}
+
+.volumes-unique .carte-pied {
+  margin-top: 1.5rem;
+  justify-content: flex-start;
+}
+
+@media (max-width: 700px) {
+  .volumes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 1rem;
+  }
+
+  .volumes-unique {
+    grid-template-columns: 1fr;
+  }
+
+  .volumes-unique .carte {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .volumes-unique .carte-corps {
+    padding-top: 1rem;
+  }
+
+  .carte-pied {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   L'ACCUEIL
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.une {
+  background:
+    radial-gradient(120% 90% at 85% 40%, rgb(197 160 89 / 22%), transparent 60%),
+    var(--sable);
+  border-bottom: 1px solid var(--sable-profond);
+  overflow: hidden;
+}
+
+.une-corps {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 4.5rem var(--marge);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 3rem;
+  align-items: center;
+}
+
+.une h1 {
+  font-size: clamp(2.2rem, 4.6vw, 3.5rem);
+  margin-top: 0.5rem;
+  color: var(--principale);
+}
+
+.une-accroche {
+  margin: 1.25rem 0 0;
+  font-size: 1.1rem;
+  max-width: 54ch;
+}
+
+.chiffres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  margin: 2.5rem 0 0;
+}
+
+.chiffres div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.chiffres dt {
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+.chiffres dd {
+  margin: 0;
+  font-family: var(--titre);
+  font-size: 2.1rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--principale);
+}
+
+/* L'eventail de couvertures : celle du milieu devant, les deux autres
+   inclinees de part et d'autre. */
+.eventail {
+  position: relative;
+  height: 400px;
+}
+
+.eventail-couverture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 230px;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--sable-profond);
+  box-shadow: 0 24px 40px -18px rgb(74 4 4 / 55%);
+}
+
+.eventail-couverture img {
+  object-fit: cover;
+}
+
+.eventail-couverture.rang-0 {
+  z-index: 3;
+  transform: translate(-50%, -50%);
+}
+
+.eventail-couverture.rang-1 {
+  z-index: 2;
+  transform: translate(-112%, -46%) rotate(-8deg);
+}
+
+.eventail-couverture.rang-2 {
+  z-index: 1;
+  transform: translate(12%, -46%) rotate(8deg);
+}
+
+/* ── Les promesses ──────────────────────────────────────────────────────── */
+
+.promesses {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  padding-top: 4rem;
+  padding-bottom: 1rem;
+}
+
+.pictogramme {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.promesse h2 {
+  font-size: 1.25rem;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.promesse p {
+  margin: 0;
+  color: var(--attenue);
+}
+
+/* ── A la une ───────────────────────────────────────────────────────────── */
+
+.alaune-tete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.alaune h2,
+.disciplines-accueil h2 {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--principale);
+}
+
+.couvertures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem 1.25rem;
+}
+
+.couvertures a {
+  display: block;
+  color: var(--encre);
+  text-decoration: none;
+}
+
+.couvertures .carte-couverture {
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.couvertures a:hover .carte-couverture {
+  transform: translateY(-4px);
+}
+
+.couvertures-titre {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: var(--titre);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.couvertures a:hover .couvertures-titre {
+  color: var(--principale);
+}
+
+/* ── Par discipline ─────────────────────────────────────────────────────── */
+
+.disciplines-accueil ul {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.disciplines-accueil a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--sable-profond);
+  border-radius: 8px;
+  color: var(--encre);
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.disciplines-accueil a:hover {
+  border-color: var(--accent);
+  background: var(--sable);
+}
+
+.discipline-nom {
+  font-family: var(--titre);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.discipline-mesure {
+  font-size: 0.85rem;
+  color: var(--attenue);
+}
+
+/* ── L'appel final ──────────────────────────────────────────────────────── */
+
+.appel {
+  background: var(--principale);
+  color: var(--fond);
+}
+
+.appel-corps {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 3.5rem var(--marge);
+  text-align: center;
+}
+
+.appel h2 {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.appel p {
+  margin: 0.75rem 0 1.75rem;
+  color: var(--sable-profond);
+}
+
+.bouton-or {
+  padding: 0.75rem 1.4rem;
+  font-size: 0.95rem;
+  background: var(--accent);
+  color: var(--encre);
+  font-weight: 600;
+}
+
+.bouton-or:hover {
+  background: var(--accent-doux);
+  color: var(--encre);
+}
+
+/* L'appel touche le pied de page : pas de marge entre les deux aplats. */
+.accueil + .pied,
+.contenu:has(.appel) + .pied {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .une-corps {
+    grid-template-columns: 1fr;
+    padding-top: 3rem;
+  }
+
+  .eventail {
+    height: 320px;
+  }
+
+  .eventail-couverture {
+    width: 180px;
+  }
+
+  .promesses {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LA LISEUSE
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Toute la hauteur sous l'en-tete : le livre se lit dans la fenetre. Le pied
+   de page s'efface en lecture — la page du site ne doit pas pouvoir defiler,
+   sans quoi le defilement du livre vers une figure l'entrainerait avec lui. */
+body:has(.liseuse) .pied {
+  display: none;
+}
+
+.liseuse {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--hauteur-barre));
+  height: calc(100dvh - var(--hauteur-barre));
+}
+
+.liseuse-barre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem var(--marge);
+  background: var(--sable);
+  border-bottom: 1px solid var(--sable-profond);
+}
+
+.liseuse-retour {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--titre);
+  font-weight: 600;
+  color: var(--principale);
+  text-decoration: none;
+}
+
+.liseuse-retour:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.liseuse-extrait {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: var(--principale);
+  text-decoration: none;
+}
+
+.liseuse-extrait:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.liseuse-choix select {
+  max-width: min(420px, 50vw);
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--sable-profond);
+  border-radius: 6px;
+  background: var(--fond);
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--encre);
+}
+
+.liseuse-cadre {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #fff;
+}
+
+/* ── Un chapitre reserve : une page, pas une carte ─────────────────────── */
+
+.reserve-bande {
+  background:
+    radial-gradient(110% 90% at 90% 20%, rgb(197 160 89 / 20%), transparent 60%),
+    var(--sable);
+  border-bottom: 1px solid var(--sable-profond);
+}
+
+.reserve-corps {
+  max-width: var(--largeur);
+  margin: 0 auto;
+  padding: 3rem var(--marge) 3.5rem;
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.reserve-corps .fil {
+  margin-bottom: 1.5rem;
+}
+
+/* Sable sur sable, les badges disparaitraient. */
+.reserve-corps .badge {
+  background: var(--fond);
+}
+
+.reserve-etiquette {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.9rem 0 0;
+  background: var(--fond);
+  color: var(--attenue);
+}
+
+.reserve-corps h1 {
+  margin-top: 0.6rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+  color: var(--principale);
+}
+
+.reserve-message {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  max-width: 60ch;
+}
+
+.reserve-sommaire h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 800px) {
+  .reserve-corps {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .reserve-couverture {
+    max-width: 200px;
+  }
+
+  .liseuse-retour {
+    font-size: 0.9rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LA FICHE D'UN VOLUME
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.fil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+  color: var(--attenue);
+}
+
+.fil a {
+  color: var(--attenue);
+}
+
+.fil a:hover {
+  color: var(--principale);
+}
+
+.fiche-tete {
+  display: grid;
+  grid-template-columns: minmax(200px, 340px) 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.fiche-resume h1 {
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  margin-top: 0.35rem;
+}
+
+.fiche-accroche {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  max-width: 60ch;
+}
+
+.fiche-achat {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--sable-profond);
+}
+
+.prix-grand {
+  font-size: 1.9rem;
+}
+
+.fiche-portee {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: var(--attenue);
+}
+
+.fiche-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.fiche-actions .bouton {
+  padding: 0.7rem 1.3rem;
+  font-size: 0.95rem;
+}
+
+/* Le telechargement de l'extrait : un lien qui s'annonce, sans rivaliser
+   avec les deux boutons de lecture. */
+.telechargement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 0.7rem 1rem;
+  border: 1px dashed var(--accent);
+  border-radius: 6px;
+  color: var(--principale);
+  text-decoration: none;
+}
+
+.telechargement:hover {
+  background: var(--sable);
+}
+
+.telechargement svg {
+  flex-shrink: 0;
+}
+
+.telechargement-titre {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.telechargement-detail {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+.fiche-langues {
+  margin: 1.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--attenue);
+}
+
+.fiche-corps {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 340px);
+  gap: 3rem;
+  margin-top: 4rem;
+}
+
+.fiche h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.fiche-presentation p {
+  max-width: 68ch;
+  margin: 0 0 1rem;
+}
+
+.fiche-licence {
+  font-size: 0.85rem;
+  color: var(--attenue);
+}
+
+.fiche-contenu {
+  padding: 1.5rem;
+  border-radius: 6px;
+  background: var(--sable);
+  align-self: start;
+}
+
+.fiche-contenu h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.fiche-chiffres,
+.fiche-pdfs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.fiche-chiffres li + li {
+  margin-top: 0.25rem;
+}
+
+.fiche-pdfs li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--sable-profond);
+  font-size: 0.85rem;
+}
+
+.fiche-pdf-nom {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fiche-pdf-taille {
+  flex-shrink: 0;
+  color: var(--attenue);
+}
+
+.fiche-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+/* ── Le sommaire ────────────────────────────────────────────────────────── */
+
+.fiche-sommaire {
+  margin-top: 4rem;
+}
+
+.chapitres {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--sable-profond);
+}
+
+.chapitre {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--sable-profond);
+}
+
+/* Tout chapitre est un lien : l'offert s'ouvre, le reserve s'explique. */
+.chapitre > a {
+  color: var(--attenue);
+  text-decoration: none;
+}
+
+.chapitre > a:hover {
+  color: var(--principale);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.chapitre.est-offert > a {
+  color: var(--principale);
+  font-weight: 600;
+}
+
+.chapitre.est-courant {
+  margin: 0 -0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  background: var(--sable);
+  border-radius: 4px;
+}
+
+.chapitre.est-courant > a {
+  color: var(--encre);
+  font-weight: 600;
+}
+
+.chapitre-mentions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: var(--attenue);
+}
+
+.etiquette {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--sable-profond);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.etiquette-offerte {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--encre);
+  font-weight: 600;
+}
+
+/* ── La serie ───────────────────────────────────────────────────────────── */
+
+.fiche-serie {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid var(--sable-profond);
+}
+
+.fiche-serie ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem 2rem;
+}
+
+@media (max-width: 800px) {
+  .fiche-tete,
+  .fiche-corps {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .fiche-couverture {
+    max-width: 280px;
+  }
+
+  .chapitre {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
 }
 
 /*

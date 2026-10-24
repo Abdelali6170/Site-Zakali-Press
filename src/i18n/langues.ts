@@ -11,10 +11,14 @@
  * ici vivent les langues que le SITE sait afficher.
  */
 
+/**
+ * `locale` est ce que `Intl` recoit pour ecrire les montants : chaque langue
+ * les ecrit a sa maniere (regle 8.2).
+ */
 export const LANGUES = [
-  { code: 'fr', libelle: 'Français', htmlLang: 'fr' },
-  { code: 'en', libelle: 'English', htmlLang: 'en' },
-  { code: 'es', libelle: 'Español', htmlLang: 'es' },
+  { code: 'fr', libelle: 'Français', htmlLang: 'fr', locale: 'fr-FR' },
+  { code: 'en', libelle: 'English', htmlLang: 'en', locale: 'en-GB' },
+  { code: 'es', libelle: 'Español', htmlLang: 'es', locale: 'es-ES' },
 ] as const;
 
 export type Langue = (typeof LANGUES)[number]['code'];
