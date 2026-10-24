@@ -671,9 +671,13 @@ répond 200, et **un fichier réservé qui est réellement présent** répond 40
 
 ### 10.4 — Une recette ne s'indexe pas
 
-Tant que le site n'est pas ouvert : indexation fermée côté application, et en-tête
-d'exclusion côté frontal. **Les deux ensemble**, et vérifiés ensemble après toute
-modification.
+Tant que le site n'est pas ouvert : `robots.txt` ferme, et l'en-tête
+`X-Robots-Tag` exclut chaque réponse. **Les deux ensemble**, et vérifiés ensemble
+après toute modification. Une Web App n'a pas de frontal : les deux viennent de
+l'application, d'une seule variable, `INDEXATION`. **Absente, elle ferme.**
+
+Le site de fichiers, lui, ne s'indexe jamais : `porte.php` pose l'en-tête sur
+chacune de ses réponses.
 
 > **Pourquoi** — deux sites au contenu identique se feraient concurrence dans les
 > résultats de recherche. Un réglage se désactive par mégarde, un en-tête se perd
