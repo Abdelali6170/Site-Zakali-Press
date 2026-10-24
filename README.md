@@ -35,4 +35,4 @@ vérification continue, les premiers tests. Les pages sont provisoires : elles
 existent pour prouver que la chaîne tient.
 
 Suivent : la chaîne de l'ouvrage, l'index comme artefact versionné, le catalogue
-issu de l'index, le contenu éditorial, le stockage objet, la mise en ligne.
+issu de l'index, le contenu éditorial, le site de fichiers, la mise en ligne.

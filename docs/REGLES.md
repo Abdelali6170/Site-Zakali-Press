@@ -286,8 +286,8 @@ ni à une clef de stockage. Une adresse absente de l'index n'atteint rien.
 
 ### 4.2 — L'adresse garde la forme d'un chemin
 
-`<clef d'œuvre>/<langue>/<chemin dans le volume>`. Cette adresse est aussi la clef
-du fichier dans le stockage objet.
+`<clef d'œuvre>/<langue>/<chemin dans le volume>`. Cette adresse est aussi la place
+du fichier sur le site de fichiers, sous le dossier des livres.
 
 > **Pourquoi** — une page de chapitre appelle ses images en relatif et ses feuilles
 > en `../`. Un identifiant opaque casserait ces liens. La sécurité ne repose pas
@@ -735,5 +735,7 @@ L'index connaît ces fichiers : il ne lui manque que d'en lire la première phra
 site archivé n'avait pas tranchées. À décider avec les pages.
 
 **Le miroir ouvert** sert encore les ouvrages entiers sans authentification. Plus
-aucun PDF n'y renvoie, mais tant qu'il est debout, le contrôle d'accès de ce site
-est contournable par une adresse devinée.
+aucun extrait n'y renvoie, mais tant qu'il est debout, le contrôle d'accès de ce
+site est contournable par une adresse devinée. **Il ne se ferme qu'après que les
+PDF complets ont été reliés** (règle 6.5) : leurs liens y mènent encore, et
+l'éteindre avant les casserait.
