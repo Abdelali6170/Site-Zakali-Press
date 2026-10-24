@@ -2,7 +2,7 @@
  * src/app/not-found.tsx
  * Zakali Press — page introuvable.
  *
- * Atteinte notamment par le middleware, quand un segment n'appartient pas a la
+ * Atteinte notamment par le proxy, quand un segment n'appartient pas a la
  * langue demandee : /es/catalogue est le mot francais sous un prefixe espagnol,
  * et ne designe rien.
  *

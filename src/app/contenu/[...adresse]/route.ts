@@ -2,7 +2,7 @@
  * src/app/contenu/[...adresse]/route.ts
  * Zakali Press — `/contenu/<adresse>`, la porte unique du contenu des ouvrages.
  *
- * Hors du middleware des langues, et sans prefixe de langue (regle 7.2) : une
+ * Hors du proxy des langues, et sans prefixe de langue (regle 7.2) : une
  * page de chapitre appelle ses images en relatif, et elles doivent repasser
  * par ici.
  */

@@ -40,7 +40,7 @@ export default function EnTete({ langue, nomDeLaMaison, familles, enAvant }: Pro
 
   // La page courante se lit dans le chemin, cote navigateur : l'adresse y est
   // celle que le visiteur voit — /es/catalogo — et non la clef interne vers
-  // laquelle le middleware a reecrit. Passer par un en-tete du middleware
+  // laquelle le proxy a reecrit. Passer par un en-tete du proxy
   // aurait force l'enveloppe a se rendre a chaque requete, et fait perdre la
   // generation statique.
   const route = routeDe(usePathname() ?? '');

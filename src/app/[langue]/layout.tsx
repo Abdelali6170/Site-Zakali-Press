@@ -4,7 +4,7 @@
  *
  * Pose `<html lang>` avec la langue reellement servie, et l'ossature commune :
  * la barre de navigation, le corps, le pied de page. Une langue inconnue
- * n'arrive jamais ici — le middleware ne laisse passer que celles declarees.
+ * n'arrive jamais ici — le proxy ne laisse passer que celles declarees.
  *
  * Les deux polices sont chargees par `next/font`, qui les heberge avec le
  * site : aucune requete vers un tiers au chargement, et aucun saut de texte

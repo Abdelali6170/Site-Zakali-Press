@@ -10,7 +10,7 @@
  *
  * Le routeur de Next associe une route a un NOM DE DOSSIER, et un dossier ne
  * peut pas s'appeler de trois façons. Les dossiers portent donc la CLEF de la
- * page — `catalogue`, `lire`, `compte` — et le middleware traduit l'adresse
+ * page — `catalogue`, `lire`, `compte` — et le proxy traduit l'adresse
  * entrante vers cette clef.
  *
  * La clef ressemble au francais parce qu'il faut bien choisir une langue pour
