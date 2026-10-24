@@ -17,7 +17,8 @@
     "index": "tsx outils/fabriquer-index.ts",
     "extraits": "tsx outils/relier-extraits.ts",
     "quai:normaliser": "tsx outils/normaliser-quai.ts",
-    "verser": "tsx outils/verser.ts"
+    "verser": "tsx outils/verser.ts",
+    "verifier": "tsx outils/verifier.ts"
   },
   "dependencies": {
     "next": "^16.4.3",
