@@ -12,6 +12,8 @@ return [
     // Generer : node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
     'secret' => '',
 
-    // Le dossier des livres, HORS de public_html. Chemin absolu sur le serveur.
-    'livres' => '',
+    // Le dossier des livres, HORS de public_html. Ce fichier est pose a cote
+    // de lui : il le designe depuis son propre dossier, sans chemin absolu a
+    // recopier — le gestionnaire de fichiers de Hostinger ne le montre pas.
+    'livres' => __DIR__ . '/livres',
 ];

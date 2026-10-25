@@ -33,8 +33,10 @@ fichier. **Rien d'autre n'en sort.**
    - dans `public_html/`, supprimer la page par défaut, puis déposer
      `porte.php` et `.htaccess` de ce dossier ;
    - à côté de `public_html`, créer `zakali-fichiers.config.php` à partir de
-     `zakali-fichiers.config.exemple.php` : le secret, et le chemin absolu de
-     `livres/` (`/home/<compte>/domains/<site de fichiers>/livres`).
+     `zakali-fichiers.config.exemple.php` : seul le secret est à remplir. Le
+     dossier des livres y est désigné par `__DIR__ . '/livres'`, depuis le
+     fichier lui-même — le gestionnaire de fichiers de Hostinger s'ouvre dans
+     le dossier du site et n'en montre pas le chemin absolu.
 4. **Vérifier la porte, avant tout versement** :
    - `https://<site de fichiers>/` répond **403** « Refuse. » — la porte est en place ;
    - `https://<site de fichiers>/livres/` répond **403** aussi : rien ne se liste ;

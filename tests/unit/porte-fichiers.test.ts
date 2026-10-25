@@ -76,10 +76,8 @@ describe.skipIf(!PHP_PRESENT)('la porte du site de fichiers', () => {
     // Un fichier hors des livres, qu'aucune adresse ne doit atteindre.
     ecrire(path.join(dossier, 'secret.txt'), 'hors des livres');
     const config = path.join(dossier, 'zakali-fichiers.config.php');
-    ecrire(
-      config,
-      `<?php return ['secret' => '${SECRET}', 'livres' => ${JSON.stringify(livres)}];`,
-    );
+    // La forme du gabarit : les livres designes depuis le fichier lui-meme.
+    ecrire(config, `<?php return ['secret' => '${SECRET}', 'livres' => __DIR__ . '/livres'];`);
 
     const port = await portLibre();
     base = `http://127.0.0.1:${port}`;
@@ -109,6 +107,7 @@ describe.skipIf(!PHP_PRESENT)('la porte du site de fichiers', () => {
     expect(reponse.headers.get('content-type')).toBe('text/html; charset=utf-8');
     expect(await reponse.text()).toBe('<p>sommaire</p>');
     expect(reponse.headers.get('x-robots-tag')).toMatch(/noindex/);
+    expect(reponse.headers.get('x-powered-by')).toBeNull();
   });
 
   it('un nom de fichier encode se retrouve', async () => {

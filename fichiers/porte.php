@@ -120,7 +120,9 @@ if ($methode !== 'GET' && $methode !== 'HEAD') {
     terminer(405, 'Methode non admise.');
 }
 
-// Rien de ce site ne doit apparaitre dans un moteur de recherche.
+// Rien de ce site ne doit apparaitre dans un moteur de recherche. Et il ne
+// dit pas quelle version de PHP le sert.
+header_remove('X-Powered-By');
 header('X-Robots-Tag: noindex, nofollow');
 header('X-Content-Type-Options: nosniff');
 
