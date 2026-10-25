@@ -216,7 +216,7 @@ Deux défauts trouvés en route, et figés par des tests : `<link rel="next">`
 offrait le chapitre 2 de chaque édition (règle 4.3) ; aucune vidéo de figure ne
 se lisait, la page les cherchant sous son propre dossier (règle 4.7).
 
-**Phase 4 — la mise en ligne, préparée, pas faite.** La porte livre selon la
+**Phase 4 — la mise en ligne. Faite le 25 octobre 2026.** La porte livre selon la
 configuration : depuis le quai sur le poste (`stockage-local.ts`), depuis le
 **site de fichiers** en ligne (`stockage-distant.ts`, `FICHIERS_URL` et
 `FICHIERS_SECRET` ; une seule des deux arrête le démarrage). Le site de
@@ -226,12 +226,38 @@ HMAC et sert les plages, les livres rangés hors de `public_html`.
 contrôle un site en ligne. L'indexation est fermée tant que `INDEXATION` ne
 vaut pas `ouverte`. Le proxy de Next 16 est `src/proxy.ts`.
 
-> Les tests de `porte.php` demandent PHP sur le poste (`PHP_BIN`) ; sans lui,
-> ils s'ignorent.
+> Les tests de `porte.php` demandent PHP (`PHP_BIN`, ou `php` dans le PATH) ;
+> sans lui, ils s'ignorent. Le contrôle continu de GitHub, lui, a PHP : ils y
+> tournent à chaque pull request.
 
-Avant tout push : savoir à quelle Web App le dépôt est relié (hPanel,
-*Deployments* : `tan-dog-933624` et `tan-crane-859173.hostingersite.com`).
+### Ce qui est en ligne
+
+| | | |
+|---|---|---|
+| **Le site** | `https://zakalipress.com` | Web App Hostinger (offre Cloud Startup), reliée à `main` : **pousser sur `main` déploie** |
+| **Le site de fichiers** | `https://fichiers.zakalipress.com` | site PHP/HTML de la même offre ; les livres dans `livres/`, à côté de `public_html` ; `porte.php` redéposé à la main après chaque changement |
+| **Le versé** | la part offerte seule | 774 fichiers, 796 Mo ; le réservé ne part qu'avec `--niveau reserve` |
+
+La Web App porte trois variables : `NEXT_PUBLIC_SITE_URL`, `FICHIERS_URL`,
+`FICHIERS_SECRET`. `INDEXATION` est absente : le site est fermé aux moteurs.
+Les quatre autres Web Apps de l'offre sont d'autres sites, sans lien avec ce
+dépôt.
+
+Dans la zone DNS de `zakalipress.com`, **`test` vise le VPS** (186.241.16.104),
+qui sert l'ancien site derrière un mot de passe et **porte PickupEat**, en
+service : on ne touche jamais à cet enregistrement.
+
+### Deux pièges de la production, que le poste ne montre pas
+
+- **L'application se voit à `https://0.0.0.0:3000`** derrière le proxy de
+  Hostinger. Toute adresse composée sur `requete.url` y envoie le navigateur :
+  les renvois de la porte sont donc **relatifs**. Ce défaut a privé le site de
+  ses vidéos à l'ouverture ; `npm run verifier` le contrôle désormais.
+- **Un CDN de Hostinger** (`Server: hcdn`) est devant le site et met des
+  réponses en cache. Sans conséquence tant que seul l'offert est servi ; le
+  jour où le réservé le sera, vérifier qu'il respecte `private` (règle 5.7).
+
 Le miroir ouvert ne se ferme qu'après que les PDF complets ont été reliés.
 
-Restent : le site de fichiers et la Web App à créer, le domaine · les comptes et
-l'achat.
+Restent : les comptes et l'achat · l'ouverture de l'indexation · le
+renouvellement de `FICHIERS_SECRET`, dont une moitié a paru sur une capture.
