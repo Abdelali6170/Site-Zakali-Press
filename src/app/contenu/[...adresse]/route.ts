@@ -55,7 +55,13 @@ export async function GET(
     // `https://0.0.0.0:3000`, et un renvoi absolu y envoyait le navigateur —
     // aucune video de figure ne se lisait en ligne. Le navigateur resout
     // l'adresse contre celle qu'il a demandee, la seule qui soit juste.
-    return new Response(null, { status: 308, headers: { Location: cheminDeContenu(decision.vers) } });
+    //
+    // Et un cache borne : sans consigne, un navigateur garde un 308 sans fin.
+    // L'ancien renvoi casse y est reste coince apres son correctif.
+    return new Response(null, {
+      status: 308,
+      headers: { Location: cheminDeContenu(decision.vers), 'Cache-Control': 'public, max-age=3600' },
+    });
   }
   if (decision.statut === 403) return refuser(decision.entree);
 

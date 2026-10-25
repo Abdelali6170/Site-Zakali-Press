@@ -39,4 +39,9 @@ describe('regle 4.7 — un renvoi ne revele jamais l’adresse interne du serveu
     expect(reponse.status).toBe(308);
     expect(reponse.headers.get('location')).toBe(`/contenu/${oeuvre}/${langue}/index.html`);
   });
+
+  it('un renvoi porte un cache borne : sans consigne, un navigateur garde un 308 sans fin', async () => {
+    const reponse = await demander(`${oeuvre}/${langue}`);
+    expect(reponse.headers.get('cache-control')).toBe('public, max-age=3600');
+  });
 });
