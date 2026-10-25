@@ -76,6 +76,21 @@ async function principal(): Promise<void> {
   const fichier = await demander(contenu(cibles.fichierReserve));
   constater('fichier reserve indexe : 403 (regle 10.3)', fichier.status === 403, String(fichier.status));
 
+  // ── Regle 4.7 : un renvoi reste sur le site ───────────────────────────────
+  // Derriere un proxy, un renvoi compose sur l'adresse interne du serveur
+  // envoyait les videos des pages vers `0.0.0.0:3000`.
+  if (cibles.video) {
+    const [oeuvre, langue, ...reste] = cibles.video.split('/');
+    const renvoi = await demander(contenu([oeuvre, langue, 'chapitres', ...reste].join('/')));
+    const vers = renvoi.headers.get('location') ?? '';
+    const resolue = vers ? new URL(vers, site) : null;
+    constater(
+      'video appelee depuis une page : renvoi sur le site (4.7)',
+      renvoi.status === 308 && resolue?.origin === new URL(site).origin,
+      `${renvoi.status} ${vers}`.slice(0, 90),
+    );
+  }
+
   // ── Regle 8.4 : ce qui est redirige ────────────────────────────────────────
   if (cibles.video) {
     const renvoi = await demander(contenu(cibles.video));

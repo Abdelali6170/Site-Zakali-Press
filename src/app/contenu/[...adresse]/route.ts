@@ -50,7 +50,12 @@ export async function GET(
 
   if (decision.statut === 404) return new Response('Introuvable', { status: 404 });
   if (decision.statut === 308) {
-    return Response.redirect(new URL(cheminDeContenu(decision.vers), requete.url), 308);
+    // Un renvoi RELATIF a la racine, jamais compose sur `requete.url` :
+    // derriere le proxy de Hostinger, l'application se voit a
+    // `https://0.0.0.0:3000`, et un renvoi absolu y envoyait le navigateur —
+    // aucune video de figure ne se lisait en ligne. Le navigateur resout
+    // l'adresse contre celle qu'il a demandee, la seule qui soit juste.
+    return new Response(null, { status: 308, headers: { Location: cheminDeContenu(decision.vers) } });
   }
   if (decision.statut === 403) return refuser(decision.entree);
 
